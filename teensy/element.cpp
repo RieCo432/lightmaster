@@ -21,7 +21,6 @@ Element::Element() {
 };
 
 
-
 Element::Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led) {
   from_pos_x = from_x;
   from_pos_y = from_y;
@@ -94,3 +93,17 @@ void Element::closeLedApparentAngles(float factor_alpha, float factor_beta) {
     start_led[i].closeApparentAngles(factor_alpha, factor_beta);
   };
 }
+
+
+void Element::resetActiveRainbowEffect() {
+  for (int i=0; i < num_leds; i++) {
+    start_led[i].activeRainbowEffect = &rainbowEffect;
+  };
+}
+
+
+void Element::setActiveRainbowEffect(RainbowEffect* newActiveRainbowEffect) {
+  for (int i=0; i < num_leds; i++) {
+    start_led[i].activeRainbowEffect = newActiveRainbowEffect;
+  };
+};

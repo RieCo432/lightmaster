@@ -21,6 +21,11 @@ Container::Container(int number_of_elements, Element *first_element, float viewe
   origin_y = viewer_y;
   origin_z = viewer_z;
 
+  for (int i=0; i < number_of_elements; i++) {
+    first_element[i].activeRainbowEffect = &rainbowEffect;
+    first_element[i].setActiveRainbowEffect(&rainbowEffect);
+  }
+
 }
 
 void Container::setElementOffsets() {
@@ -70,4 +75,17 @@ void Container::setElementApparentAngles() {
   for (int i=0; i < num_elements; i++) {
     start_element[i].closeLedApparentAngles(factor_alpha, factor_beta);
   };
+}
+
+void Container::setElementRainbowEffect() {
+  for (int i=0; i < num_elements; i++) {
+    start_element[i].setActiveRainbowEffect(&rainbowEffect);
+  }
+}
+
+
+void Container::resetElementRainbowEffect() {
+  for (int i=0; i < num_elements; i++) {
+    start_element[i].resetActiveRainbowEffect();
+  }
 }

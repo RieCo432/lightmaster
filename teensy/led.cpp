@@ -2,6 +2,7 @@
 #include <FastLED.h>
 #include "led.h"
 #include <math.h>
+#include "config.h"
 
 
 Led::Led() {
@@ -54,9 +55,12 @@ void Led::closeApparentAngles(float factor_alpha, float factor_beta) {
 }
 
 CRGB Led::getColour(uint32_t time_elapsed) {
-  float period = 60.0;
+  float period = activeRainbowEffect->period;
+
+  float angle = activeRainbowEffect->direction == 0 ? apparent_angle_alpha : apparent_angle_beta;
   float radians_per_second = 2 * M_PI / period;
-  float angle = apparent_angle_alpha + time_elapsed / 1000.0 * radians_per_second;
-  int angle_255 = round(angle /  (2 * M_PI) * 255);
+
+  float final_angle = angle + time_elapsed / 1000.0 * radians_per_second;
+  int angle_255 = round(final_angle /  (2 * M_PI) * 255);
   return CHSV(angle_255, 255, 255);
 }

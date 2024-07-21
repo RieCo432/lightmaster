@@ -1,5 +1,6 @@
 #include <FastLED.h>
 #include <tuple>
+#include "config.h"
 
 #ifndef LED_H
 #define LED_H
@@ -20,6 +21,8 @@ class Led {
 
     float apparent_angle_alpha;
     float apparent_angle_beta;
+
+    RainbowEffect* activeRainbowEffect = NULL;
 
     Led();
     Led(float x, float y, float z);

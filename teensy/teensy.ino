@@ -46,22 +46,21 @@ void setup() {
   room = Container(8, &elements[0], 2.37, 1.67, 1.7);
   room.setElementOffsets();
   room.setElementApparentAngles();
+  room.setElementRainbowEffect();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  for (int i=0; i < NUM_LEDS; i++) {
-    /*char buf1[36];
-    leds[i].getPositionString(buf1);
-    Serial.print(buf1);
-    char buf2[36];
-    leds[i].getApparentPositionString(buf2);
-    Serial.print(buf2);
-    char buf3[36];
-    leds[i].getApparentAnglesString(buf3);
-    Serial.println(buf3);*/
-
-    strip[i] = leds[i].getColour(millis());
+  int led = 0;
+  for (int i=0; i < NUM_ELEMENTS; i++) {
+    for (int j=0; j < elements[i].num_leds; j++) {
+      strip[led] = elements[i].start_led[j].getColour(millis());
+      led += 1;
+    }    
   };
   FastLED.show();
+
+  if (millis() > 30000) {
+    room.resetElementRainbowEffect();
+  }
 }
