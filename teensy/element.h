@@ -3,6 +3,7 @@
 #include "led.h"
 #include <tuple>
 #include "config.h"
+#include <FastLED.h>
 
 class Element {
   public:
@@ -16,6 +17,8 @@ class Element {
 
     int num_leds;
 
+    CRGB *strip_start;
+
     Led *start_led;
     Led *next_led;
 
@@ -23,13 +26,14 @@ class Element {
     RainbowEffect * activeRainbowEffect = &rainbowEffect;
 
     Element();
-    Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led);
+    Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip);
     
     void setLedOffsets(float offset_x, float offset_y, float offset_z);
     std::tuple<float, float, float, float> setLedApparentAngles();
     void closeLedApparentAngles(float factor_alpha, float factor_beta);
     void resetActiveRainbowEffect();
     void setActiveRainbowEffect(RainbowEffect* newActiveRainbowEffect);
+    void setStripColours();
 };
 
 #endif

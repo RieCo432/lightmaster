@@ -22,8 +22,6 @@ class Led {
     float apparent_angle_alpha;
     float apparent_angle_beta;
 
-    RainbowEffect* activeRainbowEffect = NULL;
-
     Led();
     Led(float x, float y, float z);
     void getPositionString(char* buffer);
@@ -33,6 +31,6 @@ class Led {
     std::tuple<float, float> setApparentAngles();
     void closeApparentAngles(float factor_alpha, float factor_beta);
     
-    CRGB getColour(uint32_t time_elapsed);
+    CRGB getRainbowColour(uint32_t time_elapsed, RainbowEffect* rainbowEffect);
 };
 #endif

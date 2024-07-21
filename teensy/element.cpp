@@ -16,12 +16,13 @@ Element::Element() {
   num_leds = 0;
 
   start_led = NULL;
+  strip_start = NULL;
 
   next_led = NULL;
 };
 
 
-Element::Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led) {
+Element::Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip) {
   from_pos_x = from_x;
   from_pos_y = from_y;
   from_pos_z = from_z;
@@ -33,6 +34,7 @@ Element::Element(float from_x, float from_y, float from_z, float to_x, float to_
   num_leds = length;
 
   start_led = first_led;
+  strip_start = strip;
 
   float diff_x = to_pos_x - from_pos_x;
   float diff_y = to_pos_y - from_pos_y;
@@ -96,14 +98,17 @@ void Element::closeLedApparentAngles(float factor_alpha, float factor_beta) {
 
 
 void Element::resetActiveRainbowEffect() {
-  for (int i=0; i < num_leds; i++) {
-    start_led[i].activeRainbowEffect = &rainbowEffect;
-  };
+  activeRainbowEffect = &rainbowEffect;
 }
 
 
 void Element::setActiveRainbowEffect(RainbowEffect* newActiveRainbowEffect) {
-  for (int i=0; i < num_leds; i++) {
-    start_led[i].activeRainbowEffect = newActiveRainbowEffect;
-  };
+  activeRainbowEffect = newActiveRainbowEffect;
 };
+
+void Element::setStripColours() {
+  // effect selection happens here, then call relevant Led methods if necessary
+  for (int i=0; i < num_leds; i++) {
+    strip_start[i] = start_led[i].getRainbowColour(millis(), activeRainbowEffect);
+  };
+}

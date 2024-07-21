@@ -89,3 +89,9 @@ void Container::resetElementRainbowEffect() {
     start_element[i].resetActiveRainbowEffect();
   }
 }
+
+void Container::setStripColours() {
+  for (int i=0; i < num_elements; i++) {
+    start_element[i].setStripColours();
+  }
+}

@@ -20,6 +20,7 @@ class Container {
     void setElementApparentAngles();
     void setElementRainbowEffect();
     void resetElementRainbowEffect();
+    void setStripColours();
 };
 
 #endif

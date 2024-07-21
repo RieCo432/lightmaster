@@ -54,10 +54,10 @@ void Led::closeApparentAngles(float factor_alpha, float factor_beta) {
   apparent_angle_beta *= factor_beta;
 }
 
-CRGB Led::getColour(uint32_t time_elapsed) {
-  float period = activeRainbowEffect->period;
+CRGB Led::getRainbowColour(uint32_t time_elapsed, RainbowEffect* rainbowEffect) {
+  float period = rainbowEffect->period;
 
-  float angle = activeRainbowEffect->direction == 0 ? apparent_angle_alpha : apparent_angle_beta;
+  float angle = rainbowEffect->direction == 0 ? apparent_angle_alpha : apparent_angle_beta;
   float radians_per_second = 2 * M_PI / period;
 
   float final_angle = angle + time_elapsed / 1000.0 * radians_per_second;

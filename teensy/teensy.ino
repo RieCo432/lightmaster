@@ -34,14 +34,14 @@ void setup() {
   float min_z = 0.40;
   float max_z = 2.50;
 
-  elements[0] = Element(min_x, max_y, min_z, min_x, max_y, max_z, 69, &leds[0]);
-  elements[1] = Element(min_x, max_y, max_z, max_x, max_y, max_z, 149, &leds[69]);
-  elements[2] = Element(max_x, max_y, min_z, max_x, max_y, max_z, 69, &leds[218]);
-  elements[3] = Element(max_x, max_y, max_z, max_x, min_y, max_z, 108, &leds[287]);
-  elements[4] = Element(max_x, min_y, min_z, max_x, min_y, max_z, 69, &leds[395]);
-  elements[5] = Element(max_x, min_y, max_z, min_x, min_y, max_z, 149, &leds[464]);
-  elements[6] = Element(min_x, min_y, min_z, min_x, min_y, max_z, 69, &leds[613]);
-  elements[7] = Element(min_x, min_y, max_z, min_x, max_y, max_z, 108, &leds[682]);
+  elements[0] = Element(min_x, max_y, min_z, min_x, max_y, max_z, 69, &leds[0], &strip[0]);
+  elements[1] = Element(min_x, max_y, max_z, max_x, max_y, max_z, 149, &leds[69], &strip[69]);
+  elements[2] = Element(max_x, max_y, min_z, max_x, max_y, max_z, 69, &leds[218], &strip[218]);
+  elements[3] = Element(max_x, max_y, max_z, max_x, min_y, max_z, 108, &leds[287], &strip[287]);
+  elements[4] = Element(max_x, min_y, min_z, max_x, min_y, max_z, 69, &leds[395], &strip[395]);
+  elements[5] = Element(max_x, min_y, max_z, min_x, min_y, max_z, 149, &leds[464], &strip[464]);
+  elements[6] = Element(min_x, min_y, min_z, min_x, min_y, max_z, 69, &leds[613], &strip[613]);
+  elements[7] = Element(min_x, min_y, max_z, min_x, max_y, max_z, 108, &leds[682], &strip[682]);
 
   room = Container(8, &elements[0], 2.37, 1.67, 1.7);
   room.setElementOffsets();
@@ -51,13 +51,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int led = 0;
-  for (int i=0; i < NUM_ELEMENTS; i++) {
-    for (int j=0; j < elements[i].num_leds; j++) {
-      strip[led] = elements[i].start_led[j].getColour(millis());
-      led += 1;
-    }    
-  };
+  
+  room.setStripColours();
   FastLED.show();
 
   if (millis() > 30000) {
