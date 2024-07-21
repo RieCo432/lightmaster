@@ -1,6 +1,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 #include "led.h"
+#include <tuple>
 
 class Element {
   public:
@@ -21,7 +22,8 @@ class Element {
     Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led);
     
     void setLedOffsets(float offset_x, float offset_y, float offset_z);
-    void setLedApparentAngles();
+    std::tuple<float, float, float, float> setLedApparentAngles();
+    void closeLedApparentAngles(float factor_alpha, float factor_beta);
 
 };
 

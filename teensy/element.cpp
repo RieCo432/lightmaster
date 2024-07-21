@@ -1,6 +1,7 @@
 #include <FastLED.h>
 #include "led.h"
 #include "element.h"
+#include <tuple>
 
 
 Element::Element() {
@@ -61,6 +62,35 @@ void Element::setLedOffsets(float offset_x, float offset_y, float offset_z) {
   };
 };
 
-void Element::setLedApparentAngles() {
+std::tuple<float, float, float, float> Element::setLedApparentAngles() {
+  float alpha_min = 0;
+  float alpha_max = 0;
+  float beta_min = 0;
+  float beta_max = 0;
+  for (int i=0; i < num_leds; i++) {
+    float alpha;
+    float beta;
 
+    std::tie(alpha, beta) = start_led[i].setApparentAngles();
+    
+    if (alpha < alpha_min) {
+      alpha_min = alpha;
+    } else if (alpha > alpha_max) {
+      alpha_max = alpha;
+    }
+    
+    if (beta < beta_min) {
+      beta_min = beta;
+    } else if (beta > beta_max) {
+      beta_max = beta;
+    }
+  };
+
+  return std::make_tuple(alpha_min, alpha_max, beta_min, beta_max);
 };
+
+void Element::closeLedApparentAngles(float factor_alpha, float factor_beta) {
+  for (int i=0; i < num_leds; i++) {
+    start_led[i].closeApparentAngles(factor_alpha, factor_beta);
+  };
+}

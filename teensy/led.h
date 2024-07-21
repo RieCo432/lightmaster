@@ -1,4 +1,5 @@
 #include <FastLED.h>
+#include <tuple>
 
 #ifndef LED_H
 #define LED_H
@@ -9,20 +10,26 @@ class Led {
     float pos_y;
     float pos_z;
 
+    float apparent_pos_x;
+    float apparent_pos_y;
+    float apparent_pos_z;
+
     float offset_x = 0;
     float offset_y = 0;
     float offset_z = 0;
 
-    float apparent_angle_horizontal;
-    float apparent_angle_vertical;
-
-    CRGB* colour;
+    float apparent_angle_alpha;
+    float apparent_angle_beta;
 
     Led();
     Led(float x, float y, float z);
     void getPositionString(char* buffer);
     void getApparentPositionString(char* buffer);
+    void getApparentAnglesString(char* buffer);
     void setOffsets(float x, float y, float z);
-    void setApparentAngles();
+    std::tuple<float, float> setApparentAngles();
+    void closeApparentAngles(float factor_alpha, float factor_beta);
+    
+    CRGB getColour(uint32_t time_elapsed);
 };
 #endif

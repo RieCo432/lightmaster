@@ -1,5 +1,7 @@
 #include "container.h"
 #include "element.h"
+#include <tuple>
+#include <math.h>
 
 
 Container::Container() {
@@ -28,7 +30,44 @@ void Container::setElementOffsets() {
 }
 
 void Container::setElementApparentAngles() {
+  float alpha_min = 0;
+  float alpha_max = 0;
+  float beta_min = 0;
+  float beta_max = 0;
+
   for (int i=0; i < num_elements; i++) {
-    start_element[i].setLedApparentAngles();
-  }
+    float element_alpha_min;
+    float element_alpha_max;
+    float element_beta_min;
+    float element_beta_max;
+
+
+    std::tie(element_alpha_min, element_alpha_max, element_beta_min, element_beta_max) = start_element[i].setLedApparentAngles();
+
+    if (element_alpha_min < alpha_min) {
+      alpha_min = element_alpha_min;
+    };
+    
+    if (element_alpha_max > alpha_max) {
+      alpha_max = element_alpha_max;
+    };
+
+    if (element_beta_min < beta_min) {
+      beta_min = element_beta_min;
+    };
+
+    if (element_beta_max > beta_max) {
+      beta_max = element_beta_max;
+    };
+  };
+
+  float range_alpha = alpha_max - alpha_min;
+  float range_beta = beta_max - beta_min;
+
+  float factor_alpha = 2 * M_PI / range_alpha;
+  float factor_beta = 2 * M_PI / range_beta;
+
+  for (int i=0; i < num_elements; i++) {
+    start_element[i].closeLedApparentAngles(factor_alpha, factor_beta);
+  };
 }

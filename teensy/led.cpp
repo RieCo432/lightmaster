@@ -1,5 +1,7 @@
+#include <tuple>
 #include <FastLED.h>
 #include "led.h"
+#include <math.h>
 
 
 Led::Led() {
@@ -20,7 +22,12 @@ void Led::getPositionString(char* buffer) {
 
 
 void Led::getApparentPositionString(char* buffer) {
-  sprintf(buffer, "x=%f, y=%f, z=%f; ", pos_x - offset_x, pos_y - offset_y, pos_z - offset_z); 
+  sprintf(buffer, "x=%f, y=%f, z=%f; ", apparent_pos_x, apparent_pos_y, apparent_pos_z); 
+};
+
+
+void Led::getApparentAnglesString(char* buffer) {
+  sprintf(buffer, "alpha=%f, beta=%f; ", apparent_angle_alpha, apparent_angle_beta); 
 };
 
 
@@ -28,4 +35,28 @@ void Led::setOffsets(float x, float y, float z) {
   offset_x = x;
   offset_y = y;
   offset_z = z;
+
+  apparent_pos_x = pos_x - offset_x;
+  apparent_pos_y = pos_y - offset_y;
+  apparent_pos_z = pos_z - offset_z;
+};
+
+
+std::tuple<float, float> Led::setApparentAngles() {
+  apparent_angle_alpha = fmodf(atan2(apparent_pos_x, apparent_pos_y) + 2 * M_PI, 2 * M_PI);
+  apparent_angle_beta = fmodf(atan2(apparent_pos_z, sqrt(pow(apparent_pos_x, 2.0) + pow(apparent_pos_y, 2.0))), M_PI / 2);
+  return std::make_tuple(apparent_angle_alpha, apparent_angle_beta);
+}
+
+void Led::closeApparentAngles(float factor_alpha, float factor_beta) {
+  apparent_angle_alpha *= factor_alpha;
+  apparent_angle_beta *= factor_beta;
+}
+
+CRGB Led::getColour(uint32_t time_elapsed) {
+  float period = 60.0;
+  float radians_per_second = 2 * M_PI / period;
+  float angle = apparent_angle_alpha + time_elapsed / 1000.0 * radians_per_second;
+  int angle_255 = round(angle /  (2 * M_PI) * 255);
+  return CHSV(angle_255, 255, 255);
 }
