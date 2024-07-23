@@ -22,6 +22,7 @@ class Element {
     Led *start_led;
     Led *next_led;
 
+    Effect effect = {.enabled = false, .brightness = 1.0, .name = "rainbow"};
     RainbowEffect rainbowEffect = {.period = 0, .hue_start = 0, .hue_end = 360, .direction = 0, .compress = 1};
 
     Element();

@@ -102,7 +102,15 @@ void Element::setRainbowEffect(RainbowEffect* newRainbowEffect) {
 
 void Element::setStripColours() {
   // effect selection happens here, then call relevant Led methods if necessary
-  for (int i=0; i < num_leds; i++) {
-    strip_start[i] = start_led[i].getRainbowColour(millis(), &rainbowEffect);
-  };
+  if (!effect.enabled) {
+    for (int i=0; i < num_leds; i++) {
+      strip_start[i] = CRGB::Black;
+    };
+  } else {
+    if (strcmp(effect.name, "rainbow") == 0) {
+      for (int i=0; i < num_leds; i++) {
+        strip_start[i] = start_led[i].getRainbowColour(millis(), &rainbowEffect);
+      };
+    };
+  }
 }
