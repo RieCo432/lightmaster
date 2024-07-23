@@ -43,14 +43,13 @@ void setup() {
   elements[6] = Element(min_x, min_y, min_z, min_x, min_y, max_z, 69, &leds[613], &strip[613]);
   elements[7] = Element(min_x, min_y, max_z, min_x, max_y, max_z, 108, &leds[682], &strip[682]);
 
-  room = Container(8, &elements[0], 2.37, 1.67, 1.7);
+  room = Container(8, &elements[0], max_x / 2, max_y / 2, 1.7);
   room.setElementOffsets();
   room.setElementApparentAngles();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
   room.setStripColours();
   FastLED.show();
 }
