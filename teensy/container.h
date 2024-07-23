@@ -16,7 +16,6 @@ class Container {
 
     void setElementOffsets();
     void setElementApparentAngles();
-    void setElementRainbowEffect(RainbowEffect* rainbowEffect);
     void setStripColours();
 };
 

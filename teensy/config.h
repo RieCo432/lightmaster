@@ -4,7 +4,6 @@
 
 typedef struct {
   bool enabled;
-  float brightness;
   char name[24];
 } Effect;
 
@@ -15,7 +14,37 @@ typedef struct {
   float hue_end;
   int direction;  // 0 = horizontal, 1 = vertical
   int compress; // how many times is the pattern repeated
+  float value;
+  float saturation;
 } RainbowEffect;
+
+typedef struct {
+  bool show_peaks;
+  float hue_offset_low;
+  float hue_offset_high;
+  float hue_offset_peak;
+  float hue_start;
+  float hue_end;
+  float period;
+
+  float value;
+  float saturation;
+
+  bool absolute_range;
+  float range_to_max;
+  bool reverse;
+
+  bool dual_bars;
+  
+  bool middle_out;
+
+  int bar_1_bin_start;
+  int bar_1_bin_end;
+
+  int bar_2_bin_start;
+  int bar_2_bin_end;
+
+} AudioEffect;
 
 
 

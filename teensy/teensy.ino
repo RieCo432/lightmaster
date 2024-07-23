@@ -21,6 +21,9 @@ Element elements[NUM_ELEMENTS] = {};
 Container room;
 
 
+float audio_bins[512];
+
+
 
 void setup() {
   FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(strip, NUM_LEDS);
@@ -46,6 +49,19 @@ void setup() {
   room = Container(8, &elements[0], max_x / 2, max_y / 2, 1.7);
   room.setElementOffsets();
   room.setElementApparentAngles();
+
+  for (int i=0; i < NUM_LEDS; i++) {
+    strip[i] = CRGB::Black;
+  }
+  FastLED.show();
+
+  // temporary filling of audio bins array
+  for (int i=0; i < 512; i++) {
+    audio_bins[i] = i / 511.0f; 
+  }
+
+
+
 }
 
 void loop() {

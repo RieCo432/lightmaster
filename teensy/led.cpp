@@ -84,6 +84,10 @@ CRGB Led::getRainbowColour(uint32_t time_elapsed, RainbowEffect* rainbowEffect) 
       final_angle = hue_end + gap_angle;
     }
   }
-  int angle_255 = round(final_angle /  (2 * M_PI) * 255);
-  return CHSV(angle_255, 255, 255);
+
+  int hue_255 = round(final_angle /  (2 * M_PI) * 255);
+  int saturation_255 = round(255 * rainbowEffect->saturation);
+  int value_255 = round(255 * rainbowEffect->value);
+
+  return CHSV(hue_255, saturation_255, value_255);
 }

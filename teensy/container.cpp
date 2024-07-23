@@ -71,12 +71,6 @@ void Container::setElementApparentAngles() {
   };
 }
 
-void Container::setElementRainbowEffect(RainbowEffect* rainbowEffect) {
-  for (int i=0; i < num_elements; i++) {
-    start_element[i].setRainbowEffect(rainbowEffect);
-  }
-}
-
 void Container::setStripColours() {
   for (int i=0; i < num_elements; i++) {
     start_element[i].setStripColours();
