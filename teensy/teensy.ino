@@ -46,7 +46,6 @@ void setup() {
   room = Container(8, &elements[0], 2.37, 1.67, 1.7);
   room.setElementOffsets();
   room.setElementApparentAngles();
-  room.setElementRainbowEffect();
 }
 
 void loop() {
@@ -54,8 +53,4 @@ void loop() {
   
   room.setStripColours();
   FastLED.show();
-
-  if (millis() > 30000) {
-    room.resetElementRainbowEffect();
-  }
 }

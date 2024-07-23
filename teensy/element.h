@@ -22,8 +22,7 @@ class Element {
     Led *start_led;
     Led *next_led;
 
-    RainbowEffect rainbowEffect = {.period = 60, .start_hue = 0, .end_hue = 360, .direction = 0};
-    RainbowEffect * activeRainbowEffect = &rainbowEffect;
+    RainbowEffect rainbowEffect = {.period = 60, .hue_start = 0, .hue_end = 360, .direction = 0, .compress = 1};
 
     Element();
     Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip);
@@ -31,8 +30,7 @@ class Element {
     void setLedOffsets(float offset_x, float offset_y, float offset_z);
     std::tuple<float, float, float, float> setLedApparentAngles();
     void closeLedApparentAngles(float factor_alpha, float factor_beta);
-    void resetActiveRainbowEffect();
-    void setActiveRainbowEffect(RainbowEffect* newActiveRainbowEffect);
+    void setRainbowEffect(RainbowEffect* newRainbowEffect);
     void setStripColours();
 };
 

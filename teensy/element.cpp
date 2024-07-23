@@ -94,21 +94,15 @@ void Element::closeLedApparentAngles(float factor_alpha, float factor_beta) {
   for (int i=0; i < num_leds; i++) {
     start_led[i].closeApparentAngles(factor_alpha, factor_beta);
   };
-}
+};
 
-
-void Element::resetActiveRainbowEffect() {
-  activeRainbowEffect = &rainbowEffect;
-}
-
-
-void Element::setActiveRainbowEffect(RainbowEffect* newActiveRainbowEffect) {
-  activeRainbowEffect = newActiveRainbowEffect;
+void Element::setRainbowEffect(RainbowEffect* newRainbowEffect) {
+  rainbowEffect = *newRainbowEffect;
 };
 
 void Element::setStripColours() {
   // effect selection happens here, then call relevant Led methods if necessary
   for (int i=0; i < num_leds; i++) {
-    strip_start[i] = start_led[i].getRainbowColour(millis(), activeRainbowEffect);
+    strip_start[i] = start_led[i].getRainbowColour(millis(), &rainbowEffect);
   };
 }
