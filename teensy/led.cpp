@@ -63,7 +63,7 @@ CRGB Led::getRainbowColour(uint32_t time_elapsed, RainbowEffect* rainbowEffect) 
   float hue_range = hue_end - hue_start;
 
   float angle = rainbowEffect->direction == 0 ? apparent_angle_alpha : apparent_angle_beta;
-  float radians_per_second = 2 * M_PI / period;
+  float radians_per_second = period != 0.0 ? 2 * M_PI / period : 0.0;
 
   float angle_hue_factor = hue_range / (2 * M_PI);
 

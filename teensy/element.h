@@ -22,7 +22,7 @@ class Element {
     Led *start_led;
     Led *next_led;
 
-    RainbowEffect rainbowEffect = {.period = 60, .hue_start = 0, .hue_end = 360, .direction = 0, .compress = 1};
+    RainbowEffect rainbowEffect = {.period = 0, .hue_start = 0, .hue_end = 360, .direction = 0, .compress = 1};
 
     Element();
     Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip);
