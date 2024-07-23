@@ -3,9 +3,10 @@
 
 typedef struct {
   float period;
-  float start_hue;
-  float end_hue;
+  float hue_start;
+  float hue_end;
   int direction;  // 0 = horizontal, 1 = vertical
+  int compress; // how many times is the pattern repeated
 } RainbowEffect;
 
 
