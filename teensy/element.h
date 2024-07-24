@@ -26,8 +26,8 @@ class Element {
     int bar_1_max_index = 0;
     int bar_2_max_index = 0;
 
-    int bar_1_peak_index = 0;
-    int bar_2_peak_index = 0;
+    int bar_1_peak_index = 10;
+    int bar_2_peak_index = 40;
 
 
     Effect effect = {

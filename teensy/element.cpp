@@ -143,10 +143,12 @@ void Element::applySpectrumBarsBackground() {
 
   float hue_offset_low = audioEffect.hue_offset_low / 180 * M_PI;
   float hue_offset_high = audioEffect.hue_offset_high / 180 * M_PI;
+  float hue_offset_peak = audioEffect.hue_offset_peak / 180 * M_PI;
 
 
   float hue_low = fmodf(final_hue_offset + audioEffect.hue_offset_low / 180 * M_PI, 2 * M_PI);
   float hue_high = fmodf(final_hue_offset + audioEffect.hue_offset_high / 180 * M_PI, 2* M_PI);
+  float hue_peak = fmodf(final_hue_offset + audioEffect.hue_offset_peak / 180 * M_PI, 2* M_PI);
 
   int max_num_leds;
 
@@ -167,6 +169,7 @@ void Element::applySpectrumBarsBackground() {
     for (int i=max_num_leds; i < num_leds; i++) {
       hues_255[i] = round(hue_high / (2 * M_PI) * 255);
     };
+    hues_255[bar_1_peak_index] = round(hue_peak / (2 * M_PI) * 255);
 
     if (!audioEffect.reverse) {
       for (int i=0; i < num_leds; i++) {
@@ -220,16 +223,11 @@ void Element::applySpectrumBarsBackground() {
       for (int i=index_offset + max_num_leds; i < num_leds; i++) {
         hues_255[i] = round(hue_high / (2 * M_PI) * 255);
       };
-
-
-
-
     }
+
+    hues_255[bar_1_peak_index] = round(hue_peak / (2 * M_PI) * 255);
+    hues_255[bar_2_peak_index] = round(hue_peak / (2 * M_PI) * 255);
     
-
-
-
-
 
     for (int i=0; i < num_leds; i++) {
         strip_start[i] = CHSV(hues_255[i], saturation_255, value_255);
