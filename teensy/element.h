@@ -52,13 +52,13 @@ class Element {
       .hue_offset_high = 120,
       .hue_offset_peak = 240,
       .hue_start = 0,
-      .hue_end = 1,
-      .period = 0,
+      .hue_end = 180,
+      .period = 5,
       .value = 1.0,
       .saturation = 1.0,
       
-      .absolute_range = false,
-      .range_to_max = 0.5,
+      .absolute_range = true,
+      .range_to_max = 30,
       .reverse = true,
 
       .dual_bars = true,

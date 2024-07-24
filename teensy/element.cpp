@@ -109,30 +109,63 @@ void Element::applyRainbowBackground() {
 
 void Element::applySpectrumBarsBackground() {
 
+
+  float period = audioEffect.period;
+  float hue_start = audioEffect.hue_start / 180 * M_PI;
+  float hue_end = audioEffect.hue_end / 180 * M_PI;
+
+  float hue_range = hue_end - hue_start;
+
+  float radians_per_second = period != 0.0 ? 2 * M_PI / period : 0.0;
+
+  float angle_hue_factor = hue_range / (2 * M_PI);
+
+  if (fmodf(hue_range, 2 * M_PI) != 0) {
+    angle_hue_factor *= 2;
+  }
+  
+
+  float final_hue_offset = fmodf((millis() / 1000.0 * radians_per_second) * angle_hue_factor, 2 * M_PI);
+
+  if (fmodf(hue_range, 2 * M_PI) != 0) {
+    final_hue_offset = fmodf(final_hue_offset, 2 * abs(hue_range)) + hue_start;
+    if (hue_range > 0 && final_hue_offset > hue_end) {
+      float excess_angle = final_hue_offset - hue_end;
+      final_hue_offset = hue_end - excess_angle;
+    } else if (hue_range < 0 && final_hue_offset < hue_end) {
+      float gap_angle = hue_end - final_hue_offset;
+      final_hue_offset = hue_end + gap_angle;
+    }
+  }
+
   int saturation_255 = round(audioEffect.saturation * 255);
   int value_255 = round(audioEffect.value * 255);
 
   float hue_offset_low = audioEffect.hue_offset_low / 180 * M_PI;
   float hue_offset_high = audioEffect.hue_offset_high / 180 * M_PI;
 
+
+  float hue_low = fmodf(final_hue_offset + audioEffect.hue_offset_low / 180 * M_PI, 2 * M_PI);
+  float hue_high = fmodf(final_hue_offset + audioEffect.hue_offset_high / 180 * M_PI, 2* M_PI);
+
   int max_num_leds;
+
+  int hues_255[num_leds];
 
   if (!audioEffect.dual_bars) {
     if (audioEffect.absolute_range) {
-
       max_num_leds = round(audioEffect.range_to_max);
     } else {
       max_num_leds = round(num_leds * audioEffect.range_to_max);
     }
 
     float hue_radians_shift_per_led = (hue_offset_high - hue_offset_low) / max_num_leds;
-    int hues_255[num_leds];
 
     for (int i=0; i < max_num_leds; i++) {
-      hues_255[i] = round((hue_offset_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+      hues_255[i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
     };
     for (int i=max_num_leds; i < num_leds; i++) {
-      hues_255[i] = round(hue_offset_high / (2 * M_PI) * 255);
+      hues_255[i] = round(hue_high / (2 * M_PI) * 255);
     };
 
     if (!audioEffect.reverse) {
@@ -153,41 +186,39 @@ void Element::applySpectrumBarsBackground() {
     }
 
     float hue_radians_shift_per_led = (hue_offset_high - hue_offset_low) / max_num_leds;
-    int hues_255[num_leds];
-
 
     if (!audioEffect.middle_out) {
       for (int i=0; i < max_num_leds; i++) {
-        hues_255[i] = round((hue_offset_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+        hues_255[i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
       for (int i=max_num_leds; i < round(num_leds / 2); i++) {
-        hues_255[i] = round(hue_offset_high / (2 * M_PI) * 255);
+        hues_255[i] = round(hue_high / (2 * M_PI) * 255);
       };
 
 
       for (int i=0; i < max_num_leds; i++) {
-        hues_255[num_leds - 1 - i] = round((hue_offset_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+        hues_255[num_leds - 1 - i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
       for (int i=max_num_leds; i < round(num_leds / 2); i++) {
-        hues_255[num_leds - 1 - i] = round(hue_offset_high / (2 * M_PI) * 255);
+        hues_255[num_leds - 1 - i] = round(hue_high / (2 * M_PI) * 255);
       };
     } else if (audioEffect.middle_out) {
 
       int index_offset = round(num_leds / 2);
 
       for (int i=0; i < max_num_leds; i++) {
-        hues_255[index_offset - i] = round((hue_offset_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+        hues_255[index_offset - i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
       for (int i=max_num_leds; i <= index_offset; i++) {
-        hues_255[index_offset - i] = round(hue_offset_high / (2 * M_PI) * 255);
+        hues_255[index_offset - i] = round(hue_high / (2 * M_PI) * 255);
       };
 
 
       for (int i=index_offset; i < index_offset + max_num_leds; i++) {
-        hues_255[i] = round((hue_offset_low + (i - index_offset) * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+        hues_255[i] = round((hue_low + (i - index_offset) * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
       for (int i=index_offset + max_num_leds; i < num_leds; i++) {
-        hues_255[i] = round(hue_offset_high / (2 * M_PI) * 255);
+        hues_255[i] = round(hue_high / (2 * M_PI) * 255);
       };
 
 
