@@ -61,9 +61,9 @@ class Element {
       .range_to_max = 0.5,
       .reverse = true,
 
-      .dual_bars = false,
+      .dual_bars = true,
   
-      .middle_out = false,
+      .middle_out = true,
 
       .bar_1_bin_start = 0,
       .bar_1_bin_end = 10,

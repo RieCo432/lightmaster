@@ -115,9 +115,11 @@ void Element::applySpectrumBarsBackground() {
   float hue_offset_low = audioEffect.hue_offset_low / 180 * M_PI;
   float hue_offset_high = audioEffect.hue_offset_high / 180 * M_PI;
 
+  int max_num_leds;
+
   if (!audioEffect.dual_bars) {
-    int max_num_leds;
     if (audioEffect.absolute_range) {
+
       max_num_leds = round(audioEffect.range_to_max);
     } else {
       max_num_leds = round(num_leds * audioEffect.range_to_max);
@@ -142,6 +144,65 @@ void Element::applySpectrumBarsBackground() {
         strip_start[num_leds - 1 - i] = CHSV(hues_255[i], saturation_255, value_255);
       }
     }
+  } else if (audioEffect.dual_bars) {
+
+    if (audioEffect.absolute_range) {
+      max_num_leds = round(audioEffect.range_to_max);
+    } else {
+      max_num_leds = ceil(num_leds / 2 * audioEffect.range_to_max);
+    }
+
+    float hue_radians_shift_per_led = (hue_offset_high - hue_offset_low) / max_num_leds;
+    int hues_255[num_leds];
+
+
+    if (!audioEffect.middle_out) {
+      for (int i=0; i < max_num_leds; i++) {
+        hues_255[i] = round((hue_offset_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+      };
+      for (int i=max_num_leds; i < round(num_leds / 2); i++) {
+        hues_255[i] = round(hue_offset_high / (2 * M_PI) * 255);
+      };
+
+
+      for (int i=0; i < max_num_leds; i++) {
+        hues_255[num_leds - 1 - i] = round((hue_offset_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+      };
+      for (int i=max_num_leds; i < round(num_leds / 2); i++) {
+        hues_255[num_leds - 1 - i] = round(hue_offset_high / (2 * M_PI) * 255);
+      };
+    } else if (audioEffect.middle_out) {
+
+      int index_offset = round(num_leds / 2);
+
+      for (int i=0; i < max_num_leds; i++) {
+        hues_255[index_offset - i] = round((hue_offset_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+      };
+      for (int i=max_num_leds; i <= index_offset; i++) {
+        hues_255[index_offset - i] = round(hue_offset_high / (2 * M_PI) * 255);
+      };
+
+
+      for (int i=index_offset; i < index_offset + max_num_leds; i++) {
+        hues_255[i] = round((hue_offset_low + (i - index_offset) * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+      };
+      for (int i=index_offset + max_num_leds; i < num_leds; i++) {
+        hues_255[i] = round(hue_offset_high / (2 * M_PI) * 255);
+      };
+
+
+
+
+    }
+    
+
+
+
+
+
+    for (int i=0; i < num_leds; i++) {
+        strip_start[i] = CHSV(hues_255[i], saturation_255, value_255);
+    };
   }
 }
 
