@@ -100,14 +100,14 @@ void Element::setRainbowEffect(RainbowEffect* newRainbowEffect) {
   rainbowEffect = *newRainbowEffect;
 };
 
-void Element::runRainbow() {
+void Element::applyRainbowBackground() {
   for (int i=0; i < num_leds; i++) {
         strip_start[i] = start_led[i].getRainbowColour(millis(), &rainbowEffect);
       };
 }
 
 
-void Element::runAudio() {
+void Element::applySpectrumBarsBackground() {
 
   int saturation_255 = round(audioEffect.saturation * 255);
   int value_255 = round(audioEffect.value * 255);
@@ -145,6 +145,10 @@ void Element::runAudio() {
   }
 }
 
+void Element::applyAudioMask() {
+
+};
+
 void Element::setStripColours() {
   // effect selection happens here, then call relevant Led methods if necessary
   if (!effect.enabled) {
@@ -154,12 +158,17 @@ void Element::setStripColours() {
   } else {
     if (strcmp(effect.name, "rainbow") == 0) {
 
-      runRainbow();
+      applyRainbowBackground();
       
     } else if (strcmp(effect.name, "audio") == 0) {
 
-      runAudio();
+      if (strcmp(audioEffect.baseEffect, "rainbow") == 0) {
+        applyRainbowBackground();
+      } else if (strcmp(audioEffect.baseEffect, "spectrumBars") == 0) {
+        applySpectrumBarsBackground();
+      }
 
+      applyAudioMask();
     };
   }
 }

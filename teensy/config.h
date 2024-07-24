@@ -19,6 +19,7 @@ typedef struct {
 } RainbowEffect;
 
 typedef struct {
+  char baseEffect[16];
   bool show_peaks;
   float hue_offset_low;
   float hue_offset_high;

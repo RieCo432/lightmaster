@@ -31,7 +31,7 @@ class Element {
 
 
     Effect effect = {
-      .enabled = false,
+      .enabled = true,
       .name = "audio"
     };
 
@@ -46,6 +46,7 @@ class Element {
     };
 
     AudioEffect audioEffect = {
+      .baseEffect = "spectrumBars",
       .show_peaks = true,
       .hue_offset_low = 0,
       .hue_offset_high = 120,
@@ -80,8 +81,9 @@ class Element {
     void closeLedApparentAngles(float factor_alpha, float factor_beta);
     void setRainbowEffect(RainbowEffect* newRainbowEffect);
     void setStripColours();
-    void runRainbow();
-    void runAudio();
+    void applyRainbowBackground();
+    void applySpectrumBarsBackground();
+    void applyAudioMask();
 };
 
 #endif
