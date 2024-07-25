@@ -44,14 +44,14 @@ class Element {
       .hue_start = 0,
       .hue_end = 360,
       .direction = 0,
-      .compress = 1,
+      .compress = 4,
       .value = 1.0,
       .saturation = 1.0
     };
 
     AudioEffect audioEffect = {
-      .baseEffect = "spectrumBars",
-      .show_peaks = false,
+      .baseEffect = "rainbow",
+      .show_peaks = true,
       .hue_offset_low = 0,
       .hue_offset_high = 120,
       .hue_offset_peak = 240,

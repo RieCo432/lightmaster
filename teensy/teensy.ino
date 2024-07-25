@@ -35,7 +35,6 @@ float audio_bins[512];
 
 
 void setup() {
-
   AudioMemory(12);
 
   FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(strip, NUM_LEDS);
@@ -122,9 +121,9 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  room.setStripColours();
-  FastLED.show();
+  //Serial.print("begin: ");
+  //Serial.print(millis());
+
   if (fft.available()) {
     /*Serial.print(millis());
     Serial.print("; x=");
@@ -139,4 +138,17 @@ void loop() {
       audio_bins[i] = fft.read(i);
     }
   }
+
+  //Serial.print("; after fft: ");
+  //Serial.print(millis());
+
+  room.setStripColours();
+
+  //Serial.print("; after colour setting: ");
+  //Serial.print(millis());
+
+  FastLED.show();
+
+  //Serial.print("; after applying: ");
+  //Serial.println(millis());
 }
