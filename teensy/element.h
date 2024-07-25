@@ -23,11 +23,15 @@ class Element {
     Led *start_led;
     Led *next_led;
 
+    float *audio_bins;
+
     int bar_1_max_index = 0;
     int bar_2_max_index = 0;
 
     int bar_1_peak_index = 10;
-    int bar_2_peak_index = 40;
+    int bar_2_peak_index = 60;
+
+    bool *audio_mask;
 
 
     Effect effect = {
@@ -36,10 +40,10 @@ class Element {
     };
 
     RainbowEffect rainbowEffect = {
-      .period = 0,
+      .period = 10,
       .hue_start = 0,
       .hue_end = 360,
-      .direction = 0,
+      .direction = 1,
       .compress = 1,
       .value = 1.0,
       .saturation = 1.0
@@ -59,22 +63,24 @@ class Element {
       
       .absolute_range = true,
       .range_to_max = 30,
-      .reverse = true,
+      .reverse = false,
 
       .dual_bars = true,
   
-      .middle_out = true,
+      .middle_out = false,
 
       .bar_1_bin_start = 0,
       .bar_1_bin_end = 10,
 
-      .bar_2_bin_start = 10,
-      .bar_2_bin_end = 20,
+      .bar_2_bin_start = 0,
+      .bar_2_bin_end = 10,
 
+      .max_fallback_divider = 1.3,
+      .peak_fallback_rate = 2
     };
 
     Element();
-    Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip);
+    Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip, float* fft_audio_bins);
     
     void setLedOffsets(float offset_x, float offset_y, float offset_z);
     std::tuple<float, float, float, float> setLedApparentAngles();
@@ -83,6 +89,7 @@ class Element {
     void setStripColours();
     void applyRainbowBackground();
     void applySpectrumBarsBackground();
+    void calculateAudioMask();
     void applyAudioMask();
 };
 

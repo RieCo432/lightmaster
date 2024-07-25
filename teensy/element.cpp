@@ -22,7 +22,7 @@ Element::Element() {
 };
 
 
-Element::Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip) {
+Element::Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip, float* fft_audio_bins) {
   from_pos_x = from_x;
   from_pos_y = from_y;
   from_pos_z = from_z;
@@ -35,6 +35,10 @@ Element::Element(float from_x, float from_y, float from_z, float to_x, float to_
 
   start_led = first_led;
   strip_start = strip;
+
+  audio_bins = fft_audio_bins;
+
+  audio_mask = malloc(num_leds);
 
   float diff_x = to_pos_x - from_pos_x;
   float diff_y = to_pos_y - from_pos_y;
@@ -190,44 +194,48 @@ void Element::applySpectrumBarsBackground() {
 
     float hue_radians_shift_per_led = (hue_offset_high - hue_offset_low) / max_num_leds;
 
+
+    int bar_1_index_offset = floor(num_leds / 2 - 0.5);
+    int bar_2_index_offset = ceil(num_leds / 2 - 0.5);
+
     if (!audioEffect.middle_out) {
       for (int i=0; i < max_num_leds; i++) {
         hues_255[i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
-      for (int i=max_num_leds; i < round(num_leds / 2); i++) {
+      for (int i=max_num_leds; i <= bar_1_index_offset; i++) {
         hues_255[i] = round(hue_high / (2 * M_PI) * 255);
       };
+      hues_255[bar_1_peak_index] = round(hue_peak / (2 * M_PI) * 255);
 
 
       for (int i=0; i < max_num_leds; i++) {
         hues_255[num_leds - 1 - i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
-      for (int i=max_num_leds; i < round(num_leds / 2); i++) {
+      for (int i=max_num_leds; i <= bar_2_index_offset; i++) {
         hues_255[num_leds - 1 - i] = round(hue_high / (2 * M_PI) * 255);
       };
+      hues_255[num_leds - 1 - bar_2_peak_index] = round(hue_peak / (2 * M_PI) * 255);
+
+
     } else if (audioEffect.middle_out) {
 
-      int index_offset = round(num_leds / 2);
-
       for (int i=0; i < max_num_leds; i++) {
-        hues_255[index_offset - i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+        hues_255[bar_1_index_offset - i] = round((hue_low + i * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
-      for (int i=max_num_leds; i <= index_offset; i++) {
-        hues_255[index_offset - i] = round(hue_high / (2 * M_PI) * 255);
+      for (int i=max_num_leds; i <= bar_1_index_offset; i++) {
+        hues_255[bar_1_index_offset - i] = round(hue_high / (2 * M_PI) * 255);
       };
+      hues_255[bar_1_index_offset - bar_1_peak_index] = round(hue_peak / (2 * M_PI) * 255);
 
 
-      for (int i=index_offset; i < index_offset + max_num_leds; i++) {
-        hues_255[i] = round((hue_low + (i - index_offset) * hue_radians_shift_per_led) / (2 * M_PI) * 255);
+      for (int i=bar_2_index_offset; i < bar_2_index_offset + max_num_leds; i++) {
+        hues_255[i] = round((hue_low + (i - bar_2_index_offset) * hue_radians_shift_per_led) / (2 * M_PI) * 255);
       };
-      for (int i=index_offset + max_num_leds; i < num_leds; i++) {
+      for (int i=bar_2_index_offset + max_num_leds; i < num_leds; i++) {
         hues_255[i] = round(hue_high / (2 * M_PI) * 255);
       };
+      hues_255[bar_2_index_offset - bar_2_peak_index] = round(hue_peak / (2 * M_PI) * 255);
     }
-
-    hues_255[bar_1_peak_index] = round(hue_peak / (2 * M_PI) * 255);
-    hues_255[bar_2_peak_index] = round(hue_peak / (2 * M_PI) * 255);
-    
 
     for (int i=0; i < num_leds; i++) {
         strip_start[i] = CHSV(hues_255[i], saturation_255, value_255);
@@ -235,8 +243,128 @@ void Element::applySpectrumBarsBackground() {
   }
 }
 
-void Element::applyAudioMask() {
+void Element::calculateAudioMask() {
 
+  for (int i=0; i < num_leds; i++) {
+    audio_mask[i] = false;
+  }
+
+  float bar_1_amplitude = 0.0;
+  for (int i=audioEffect.bar_1_bin_start; i <= audioEffect.bar_1_bin_end; i++) {
+    bar_1_amplitude += audio_bins[i];
+  }
+  bar_1_amplitude /= (audioEffect.bar_1_bin_end - audioEffect.bar_1_bin_start);
+
+
+  float normalised_bar_1_amplitude = normalise_bin_amplitude(bar_1_amplitude);
+  int bar_1_max_led_count = num_leds;
+
+  float bar_2_amplitude;
+  float normalised_bar_2_amplitude;
+  int bar_2_max_led_count;
+
+  if (audioEffect.dual_bars) {
+    bar_2_amplitude = 0.0;
+    for (int i=audioEffect.bar_2_bin_start; i <= audioEffect.bar_2_bin_end; i++) {
+      bar_2_amplitude += audio_bins[i];
+    }
+    bar_2_amplitude /= (audioEffect.bar_2_bin_end - audioEffect.bar_2_bin_start);
+
+    normalised_bar_2_amplitude = normalise_bin_amplitude(bar_2_amplitude);
+    bar_1_max_led_count = floor(num_leds / 2);
+    bar_2_max_led_count = bar_1_max_led_count;
+  }
+
+
+  int bar_1_led_count_target = round(bar_1_max_led_count * normalised_bar_1_amplitude);
+  bar_1_max_index = max(bar_1_led_count_target, round(bar_1_max_index / audioEffect.max_fallback_divider));
+  bar_1_peak_index = max(max(bar_1_peak_index - audioEffect.peak_fallback_rate, 0), bar_1_led_count_target);
+
+
+  /*Serial.print("amplitude 1: ");
+  Serial.print(bar_1_amplitude);
+  Serial.print("; normal 1: ");
+  Serial.print(normalised_bar_1_amplitude);
+  Serial.print("; count_target 1: ");
+  Serial.print(bar_1_led_count_target);
+  Serial.print("; max 1: ");
+  Serial.print(bar_1_max_index);
+  Serial.print("; peak 1: ");
+  Serial.println(bar_1_peak_index);*/
+  
+  int bar_2_led_count_target;
+
+  if (audioEffect.dual_bars) {
+    bar_2_led_count_target = round(bar_2_max_led_count * normalised_bar_2_amplitude);
+
+    bar_2_max_index = max(bar_2_led_count_target, round(bar_2_max_index / audioEffect.max_fallback_divider));
+    bar_2_peak_index = max(max(bar_2_peak_index - audioEffect.peak_fallback_rate, 0), bar_2_led_count_target);
+  }
+
+
+  /*Serial.print("amplitude 2: ");
+  Serial.print(bar_2_amplitude);
+  Serial.print("; normal 2: ");
+  Serial.print(normalised_bar_2_amplitude);
+  Serial.print("; count_target 2: ");
+  Serial.print(bar_2_led_count_target);
+  Serial.print("; max 2: ");
+  Serial.print(bar_2_max_index);
+  Serial.print("; peak 2: ");
+  Serial.println(bar_2_peak_index);*/
+
+  if (!audioEffect.dual_bars) {
+
+    if (!audioEffect.reverse) {
+      for (int i=0; i <= bar_1_max_index; i++) {
+        audio_mask[i] = true;
+      }
+      audio_mask[bar_1_peak_index] = true;
+
+    } else if (audioEffect.reverse) {
+      for (int i=0; i <= bar_1_max_index; i++) {
+        audio_mask[num_leds - 1 - i] = true;
+      }
+      audio_mask[num_leds - 1 - bar_1_peak_index] = true;
+    }  
+    
+  } else if (audioEffect.dual_bars) {
+
+    if (!audioEffect.middle_out) {
+
+      for (int i=0; i <= bar_1_max_index; i++) {
+        audio_mask[i] = true;
+      }
+      audio_mask[bar_1_peak_index] = true;
+
+      for (int i=0; i <= bar_2_max_index; i++) {
+        audio_mask[num_leds - 1 - i] = true;
+      }
+      audio_mask[num_leds - 1 - bar_2_peak_index] = true;
+
+
+    } else if (audioEffect.middle_out) {
+
+      int bar_1_start = floor(num_leds / 2 - 0.5);
+      int bar_2_start = ceil(num_leds / 2 - 0.5);
+
+      for (int i=0; i <= bar_1_max_index; i++) {
+        audio_mask[bar_1_start - i] = true;
+      }
+      audio_mask[bar_1_start - bar_1_peak_index] = true;
+
+      for (int i=0; i <= bar_2_max_index; i++) {
+        audio_mask[bar_2_start + i] = true;
+      }
+      audio_mask[bar_2_start + bar_2_peak_index] = true;
+    }
+  }
+}
+
+void Element::applyAudioMask() {
+  for (int i=0; i < num_leds; i++) {
+    if (!audio_mask[i]) strip_start[i] = CRGB::Black;
+  }
 };
 
 void Element::setStripColours() {
@@ -252,13 +380,15 @@ void Element::setStripColours() {
       
     } else if (strcmp(effect.name, "audio") == 0) {
 
+      calculateAudioMask();
+
       if (strcmp(audioEffect.baseEffect, "rainbow") == 0) {
         applyRainbowBackground();
       } else if (strcmp(audioEffect.baseEffect, "spectrumBars") == 0) {
         applySpectrumBarsBackground();
       }
 
-      applyAudioMask();
+      // applyAudioMask();
     };
   }
 }
