@@ -35,7 +35,7 @@ class Element {
 
 
     Effect effect = {
-      .enabled = true,
+      .enabled = false,
       .name = "audio"
     };
 
@@ -43,7 +43,7 @@ class Element {
       .period = 10,
       .hue_start = 0,
       .hue_end = 360,
-      .direction = 1,
+      .direction = 0,
       .compress = 1,
       .value = 1.0,
       .saturation = 1.0
@@ -51,7 +51,7 @@ class Element {
 
     AudioEffect audioEffect = {
       .baseEffect = "spectrumBars",
-      .show_peaks = true,
+      .show_peaks = false,
       .hue_offset_low = 0,
       .hue_offset_high = 120,
       .hue_offset_peak = 240,
@@ -76,7 +76,7 @@ class Element {
       .bar_2_bin_end = 10,
 
       .max_fallback_divider = 1.3,
-      .peak_fallback_rate = 2
+      .peak_fallback_rate = 1
     };
 
     Element();
