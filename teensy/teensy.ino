@@ -58,6 +58,58 @@ void setup() {
   elements[6] = Element(min_x, min_y, min_z, min_x, min_y, max_z, 69, &leds[613], &strip[613], audio_bins);
   elements[7] = Element(min_x, min_y, max_z, min_x, max_y, max_z, 108, &leds[682], &strip[682], audio_bins);
 
+  // Temporary audio effect config
+  elements[0].audioEffect.dual_bars = false;
+  elements[0].audioEffect.reverse = true;
+  elements[0].audioEffect.bar_1_bin_start = 2;
+  elements[0].audioEffect.bar_1_bin_end = 3;
+
+  elements[2].audioEffect.dual_bars = false;
+  elements[2].audioEffect.reverse = true;
+  elements[2].audioEffect.bar_1_bin_start = 2;
+  elements[2].audioEffect.bar_1_bin_end = 3;
+
+
+  elements[4].audioEffect.dual_bars = false;
+  elements[4].audioEffect.reverse = true;
+  elements[4].audioEffect.bar_1_bin_start = 4;
+  elements[4].audioEffect.bar_1_bin_end = 6;
+
+  elements[6].audioEffect.dual_bars = false;
+  elements[6].audioEffect.reverse = true;
+  elements[6].audioEffect.bar_1_bin_start = 4;
+  elements[6].audioEffect.bar_1_bin_end = 6;
+
+
+  elements[1].audioEffect.dual_bars = true;
+  elements[1].audioEffect.middle_out = false;
+  elements[1].audioEffect.bar_1_bin_start = 7;
+  elements[1].audioEffect.bar_1_bin_end = 10;
+  elements[1].audioEffect.bar_2_bin_start = 11;
+  elements[1].audioEffect.bar_2_bin_end = 15;
+
+  elements[3].audioEffect.dual_bars = true;
+  elements[3].audioEffect.middle_out = false;
+  elements[3].audioEffect.bar_1_bin_start = 33;
+  elements[3].audioEffect.bar_1_bin_end = 46;
+  elements[3].audioEffect.bar_2_bin_start = 47;
+  elements[3].audioEffect.bar_2_bin_end = 66;
+
+  elements[5].audioEffect.dual_bars = true;
+  elements[5].audioEffect.middle_out = false;
+  elements[5].audioEffect.bar_1_bin_start = 16;
+  elements[5].audioEffect.bar_1_bin_end = 22;
+  elements[5].audioEffect.bar_2_bin_start = 23;
+  elements[5].audioEffect.bar_2_bin_end = 32;
+
+  elements[7].audioEffect.dual_bars = true;
+  elements[7].audioEffect.middle_out = false;
+  elements[7].audioEffect.bar_1_bin_start = 67;
+  elements[7].audioEffect.bar_1_bin_end = 93;
+  elements[7].audioEffect.bar_2_bin_start = 94;
+  elements[7].audioEffect.bar_2_bin_end = 131;
+
+
   room = Container(8, &elements[0], max_x / 2, max_y / 2, 1.7);
   room.setElementOffsets();
   room.setElementApparentAngles();
