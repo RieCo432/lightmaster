@@ -102,33 +102,33 @@ void Element::closeLedApparentAngles(float factor_alpha, float factor_beta) {
 };
 
 void Element::setEffect(JsonDocument config) {
-  effect.enabled = config["enabled"];
-  strcpy(effect.name, config["name"]);
+  if (config.containsKey("enabled")) effect.enabled = config["enabled"];
+  if (config.containsKey("name")) strcpy(effect.name, config["name"]);
 }
 
 
 void Element::setAudioEffect(JsonDocument config) {
-  strcpy(audioEffect.baseEffect, config["base_effect"]);
-  audioEffect.show_peaks = config["show_peaks"];
-  audioEffect.hue_offset_low = config["hue_offset_low"];
-  audioEffect.hue_offset_high = config["hue_offset_high"];
-  audioEffect.hue_offset_peak = config["hue_offset_peak"];
-  audioEffect.hue_start = config["hue_start"];
-  audioEffect.hue_end = config["hue_end"];
-  audioEffect.period = config["period"];
-  audioEffect.value = config["value"];
-  audioEffect.saturation = config["saturation"];
-  audioEffect.absolute_range = config["absolute_range"];
-  audioEffect.range_to_max = config["range_to_max"];
-  audioEffect.reverse = config["reverse"];
-  audioEffect.dual_bars = config["dual_bars"];
-  audioEffect.middle_out = config["middle_out"];
-  audioEffect.bar_1_bin_start = config["bar_1_bin_start"];
-  audioEffect.bar_1_bin_end = config["bar_1_bin_end"];
-  audioEffect.bar_2_bin_start = config["bar_2_bin_start"];
-  audioEffect.bar_2_bin_end = config["bar_2_bin_end"];
-  audioEffect.max_fallback_divider = config["max_fallback_divider"];
-  audioEffect.peak_fallback_rate = config["peak_fallback_rate"];
+  if (config.containsKey("base_effect")) strcpy(audioEffect.baseEffect, config["base_effect"]);
+  if (config.containsKey("show_peaks")) audioEffect.show_peaks = config["show_peaks"];
+  if (config.containsKey("hue_offset_low")) audioEffect.hue_offset_low = config["hue_offset_low"];
+  if (config.containsKey("hue_offset_high")) audioEffect.hue_offset_high = config["hue_offset_high"];
+  if (config.containsKey("hue_offset_peak")) audioEffect.hue_offset_peak = config["hue_offset_peak"];
+  if (config.containsKey("hue_start")) audioEffect.hue_start = config["hue_start"];
+  if (config.containsKey("hue_end")) audioEffect.hue_end = config["hue_end"];
+  if (config.containsKey("period")) audioEffect.period = config["period"];
+  if (config.containsKey("value")) audioEffect.value = config["value"];
+  if (config.containsKey("saturation")) audioEffect.saturation = config["saturation"];
+  if (config.containsKey("absolute_range")) audioEffect.absolute_range = config["absolute_range"];
+  if (config.containsKey("range_to_max")) audioEffect.range_to_max = config["range_to_max"];
+  if (config.containsKey("reverse")) audioEffect.reverse = config["reverse"];
+  if (config.containsKey("dual_bars")) audioEffect.dual_bars = config["dual_bars"];
+  if (config.containsKey("middle_out")) audioEffect.middle_out = config["middle_out"];
+  if (config.containsKey("bar_1_bin_start")) audioEffect.bar_1_bin_start = config["bar_1_bin_start"];
+  if (config.containsKey("bar_1_bin_end")) audioEffect.bar_1_bin_end = config["bar_1_bin_end"];
+  if (config.containsKey("bar_2_bin_start")) audioEffect.bar_2_bin_start = config["bar_2_bin_start"];
+  if (config.containsKey("bar_2_bin_end")) audioEffect.bar_2_bin_end = config["bar_2_bin_end"];
+  if (config.containsKey("max_fallback_divider")) audioEffect.max_fallback_divider = config["max_fallback_divider"];
+  if (config.containsKey("peak_fallback_rate")) audioEffect.peak_fallback_rate = config["peak_fallback_rate"];
 }
 
 void Element::setRainbowEffect(JsonDocument config) {
