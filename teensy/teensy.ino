@@ -3,6 +3,7 @@
 #include "container.h"
 #include <FastLED.h>
 #include <Audio.h>
+#include <ArduinoJson.h>
 
 
 #define HWSerial Serial1
@@ -15,6 +16,8 @@
 #define DATA_PIN 11
 #define CLOCK_PIN 13
 
+#define RX_BUFFER_SIZE 2048
+
 
 AudioInputAnalog       input;
 AudioAnalyzeFFT1024    fft;
@@ -23,7 +26,6 @@ AudioOutputI2S         audioOutput;        // audio shield: headphones & line-ou
 AudioConnection patchCord1(input, 0, fft, 0);
 
 const int myInput = AUDIO_INPUT_LINEIN;
-
 
 CRGB strip[NUM_LEDS];
 Led leds[NUM_LEDS] = {};
@@ -137,6 +139,34 @@ void loop() {
     Serial.println(fft.read(10, 12));*/
     for (int i=0; i < 512; i++) {
       audio_bins[i] = fft.read(i);
+    }
+  }
+
+  if (Serial.available()) {
+    Serial.println("reading serial...");
+    char rx_data[RX_BUFFER_SIZE];
+    Serial.readBytesUntil('\n', rx_data, RX_BUFFER_SIZE);
+    Serial.println(rx_data);
+
+    JsonDocument serial_config;
+    deserializeJson(serial_config, rx_data);
+    
+    const char* target_type = new char(12);
+    const char* target_config = new char(12);
+
+
+    target_type = serial_config["type"];
+    int target_index = serial_config["index"];
+    target_config = serial_config["config"];
+
+    if (strcmp(target_type, "element") == 0) {
+      if (strcmp(target_config, "effect") == 0) {
+        elements[target_index].setEffect(serial_config["data"]);
+      } else if (strcmp(target_config, "audio") == 0) {
+        elements[target_index].setAudioEffect(serial_config["data"]);
+      } else if (strcmp(target_config, "rainbow") == 0) {
+        elements[target_index].setRainbowEffect(serial_config["data"]);
+      }
     }
   }
 

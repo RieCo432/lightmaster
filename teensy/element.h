@@ -5,6 +5,7 @@
 #include "config.h"
 #include <FastLED.h>
 #include <Arduino.h>
+#include <ArduinoJson.h>
 
 class Element {
   public:
@@ -85,7 +86,9 @@ class Element {
     void setLedOffsets(float offset_x, float offset_y, float offset_z);
     std::tuple<float, float, float, float> setLedApparentAngles();
     void closeLedApparentAngles(float factor_alpha, float factor_beta);
-    void setRainbowEffect(RainbowEffect* newRainbowEffect);
+    void setEffect(JsonDocument config);
+    void setAudioEffect(JsonDocument config);
+    void setRainbowEffect(JsonDocument config);
     void setStripColours();
     void applyRainbowBackground();
     void applySpectrumBarsBackground();
