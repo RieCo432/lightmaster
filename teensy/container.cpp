@@ -24,7 +24,7 @@ Container::Container(int number_of_elements, Element *first_element, float viewe
 
 void Container::setElementOffsets() {
   for (int i=0; i < num_elements; i++) {
-    start_element[i].setLedOffsets(origin_x, origin_y, origin_z);
+    start_element[i].setLedOffsets(origin_x + container_offset_x, origin_y + container_offset_y, origin_z + container_offset_y);
   }
 }
 
@@ -75,4 +75,11 @@ void Container::setStripColours() {
   for (int i=0; i < num_elements; i++) {
     start_element[i].setStripColours();
   }
+}
+
+
+void Container::setContainerOffsets(float offset_x, float offset_y, float offset_z) {
+  container_offset_x = offset_x;
+  container_offset_y = offset_y;
+  container_offset_z = offset_z;
 }

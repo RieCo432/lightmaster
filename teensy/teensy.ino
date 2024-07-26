@@ -10,6 +10,7 @@
 
 #define NUM_LEDS 790
 #define NUM_ELEMENTS 8
+#define NUM_CONTAINERS 1
 
 #define DATA_PIN 11
 #define CLOCK_PIN 13
@@ -27,7 +28,7 @@ const int myInput = AUDIO_INPUT_LINEIN;
 CRGB strip[NUM_LEDS];
 Led leds[NUM_LEDS] = {};
 Element elements[NUM_ELEMENTS] = {};
-Container room;
+Container containers[NUM_CONTAINERS] {};
 
 
 float audio_bins[512];
@@ -109,9 +110,9 @@ void setup() {
   elements[7].audioEffect.bar_2_bin_end = 131;
 
 
-  room = Container(8, &elements[0], max_x / 2, max_y / 2, 1.7);
-  room.setElementOffsets();
-  room.setElementApparentAngles();
+  containers[0] = Container(8, &elements[0], max_x / 2, max_y / 2, 1.7);
+  containers[0].setElementOffsets();
+  containers[0].setElementApparentAngles();
 
   for (int i=0; i < NUM_LEDS; i++) {
     strip[i] = CRGB::Black;
@@ -142,7 +143,9 @@ void loop() {
   //Serial.print("; after fft: ");
   //Serial.print(millis());
 
-  room.setStripColours();
+  for (int i=0; i < NUM_CONTAINERS; i++) {
+    containers[i].setStripColours();
+  }
 
   //Serial.print("; after colour setting: ");
   //Serial.print(millis());
