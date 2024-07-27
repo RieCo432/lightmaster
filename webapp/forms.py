@@ -37,8 +37,9 @@ class TargetForm(FlaskForm):
 def get_all_target_elements(target_form):
     elements = []
     elements += target_form.element_indexes.data if target_form.apply_to_elements.data else []
-    for i in target_form.container_indexes.data:
-        elements += setup_config["container_elements"][i]
+    if target_form.apply_to_containers.data:
+        for i in target_form.container_indexes.data:
+            elements += setup_config["container_elements"][i]
 
     return list(set(elements))
 

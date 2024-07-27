@@ -66,7 +66,7 @@ def get_elements_with_same_audio_config(element_index):
     return indexes
 
 
-def apply_effect(effect_form : forms.EffectForm):
+def apply_effect(effect_form: forms.EffectForm):
     for element_index in get_all_target_elements(effect_form.targets):
         effect_config["elements"][element_index]["effect"]["enabled"] = effect_form.enabled.data
         effect_config["elements"][element_index]["effect"]["effect_name"] = effect_form.effect_name.data
@@ -87,7 +87,7 @@ def read_effect_to_form(effect_form, element_index):
         effect_form.targets.container_indexes.data = containers
 
 
-def apply_audio(audio_form : forms.AudioForm):
+def apply_audio(audio_form: forms.AudioForm):
     for element_index in get_all_target_elements(audio_form.targets):
         effect_config["elements"][element_index]["audio"]["base_effect"] = audio_form.base_effect.data
         effect_config["elements"][element_index]["audio"]["show_peaks"] = audio_form.show_peaks.data
@@ -146,7 +146,7 @@ def read_audio_to_form(audio_form, element_index):
         audio_form.targets.container_indexes.data = containers
 
 
-def apply_rainbow(rainbow_form : forms.RainbowForm):
+def apply_rainbow(rainbow_form: forms.RainbowForm):
     for element_index in get_all_target_elements(rainbow_form.targets):
         effect_config["elements"][element_index]["rainbow"]["period"] = rainbow_form.period.data
         effect_config["elements"][element_index]["rainbow"]["hue_start"] = rainbow_form.hue_start.data

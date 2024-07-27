@@ -53,8 +53,6 @@ def index():
         }
         audio_groups_formatted.append(formatted_audio_group)
 
-
-
     return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted)
 
 
