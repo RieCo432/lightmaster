@@ -23,7 +23,8 @@ def index():
             "text": ", ".join(
                 [container[1] for container in containers]
                 + [element[1] for element in elements]
-            )
+            ),
+            "summary": get_effect_summary(effect_group[0][0])
         }
         effect_groups_formatted.append(formatted_effect_group)
 
@@ -36,7 +37,8 @@ def index():
             "text": ", ".join(
                 [container[1] for container in containers]
                 + [element[1] for element in elements]
-            )
+            ),
+            "summary": get_rainbow_summary(rainbow_group[0][0])
         }
         rainbow_groups_formatted.append(formatted_rainbow_group)
 
@@ -49,7 +51,8 @@ def index():
             "text": ", ".join(
                 [container[1] for container in containers]
                 + [element[1] for element in elements]
-            )
+            ),
+            "summary": get_audio_summary(audio_group[0][0])
         }
         audio_groups_formatted.append(formatted_audio_group)
 

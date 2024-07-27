@@ -220,3 +220,14 @@ def get_audio_groups():
 
     return [[(element_index, setup_config["element_names"][element_index]) for element_index in group_indexes] for group_indexes in audio_groups]
 
+
+def get_effect_summary(element_index):
+    return effect_config["elements"][element_index]["effect"]
+
+
+def get_rainbow_summary(element_index):
+    return effect_config["elements"][element_index]["rainbow"]
+
+
+def get_audio_summary(element_index):
+    return effect_config["elements"][element_index]["audio"]

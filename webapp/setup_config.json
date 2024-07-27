@@ -1,5 +1,5 @@
 {
-  "elements": [0, 1],
+  "elements": [0, 1, 2, 3, 4, 5, 6, 7],
   "element_names": [
     "room_vertical_se",
     "room_horizontal_s",
@@ -12,5 +12,5 @@
   ],
   "containers": [0],
   "container_names": ["room"],
-  "container_elements": [[0, 1]]
+  "container_elements": [[0, 1, 2, 3, 4, 5, 6, 7]]
 }

@@ -5,21 +5,27 @@
     <p>
         <h2>Effect Groups</h2>
         {% for effect_group in effect_groups_formatted %}
-            <a href="{{effect_group['link']}}">Effect for {{ effect_group["text"] }}</a><br>
+            <a href="{{effect_group['link']}}">Effect for {{ effect_group["text"] }}</a>
+            {{ effect_group["summary"] }}
+            <br>
         {% endfor %}
     </p>
 
     <p>
         <h2>Rainbow Groups</h2>
         {% for rainbow_group in rainbow_groups_formatted %}
-            <a href="{{rainbow_group['link']}}">Rainbow for {{ rainbow_group["text"] }}</a><br>
+            <a href="{{rainbow_group['link']}}">Rainbow for {{ rainbow_group["text"] }}</a>
+            {{ rainbow_group["summary"] }}
+            <br>
         {% endfor %}
     </p>
 
     <p>
         <h2>Audio Groups</h2>
         {% for audio_group in audio_groups_formatted %}
-            <a href="{{audio_group['link']}}">Audio for {{ audio_group["text"] }}</a><br>
+            <a href="{{audio_group['link']}}">Audio for {{ audio_group["text"] }}</a>
+            {{ audio_group["summary"] }}
+            <br>
         {% endfor %}
     </p>
 
