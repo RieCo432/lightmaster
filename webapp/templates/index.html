@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <p>
+        <h2>Effect Groups</h2>
+        {% for effect_group in effect_groups_formatted %}
+            <a href="{{effect_group['link']}}">Effect for {{ effect_group["text"] }}</a><br>
+        {% endfor %}
+    </p>
+
+    <p>
+        <h2>Rainbow Groups</h2>
+        {% for rainbow_group in rainbow_groups_formatted %}
+            <a href="{{rainbow_group['link']}}">Rainbow for {{ rainbow_group["text"] }}</a><br>
+        {% endfor %}
+    </p>
+
+    <p>
+        <h2>Audio Groups</h2>
+        {% for audio_group in audio_groups_formatted %}
+            <a href="{{audio_group['link']}}">Audio for {{ audio_group["text"] }}</a><br>
+        {% endfor %}
+    </p>
+
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+{% endblock %}

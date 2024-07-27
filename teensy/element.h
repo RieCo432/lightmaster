@@ -37,14 +37,14 @@ class Element {
 
     Effect effect = {
       .enabled = false,
-      .name = "audio"
+      .name = "rainbow"
     };
 
     RainbowEffect rainbowEffect = {
       .period = 10,
       .hue_start = 0,
       .hue_end = 360,
-      .direction = 0,
+      .direction = 1,
       .compress = 4,
       .value = 1.0,
       .saturation = 1.0

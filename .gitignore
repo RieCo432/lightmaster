@@ -1,1 +1,4 @@
 temp/
+webapp/venv
+webapp/.idea
+webapp/__pycache__
