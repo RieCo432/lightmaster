@@ -41,10 +41,10 @@ class Element {
     };
 
     RainbowEffect rainbowEffect = {
-      .period = 10,
+      .period = 0,
       .hue_start = 0,
       .hue_end = 360,
-      .direction = 1,
+      .direction = 0,
       .compress = 4,
       .value = 1.0,
       .saturation = 1.0
@@ -84,6 +84,7 @@ class Element {
     Element(float from_x, float from_y, float from_z, float to_x, float to_y, float to_z, int length, Led* first_led, CRGB* strip, float* fft_audio_bins);
     
     void setLedOffsets(float offset_x, float offset_y, float offset_z);
+    void setLedViewer(float viewer_x, float viewer_y, float viewer_z);
     std::tuple<float, float, float, float> setLedApparentAngles();
     void closeLedApparentAngles(float factor_alpha, float factor_beta);
     void setEffect(JsonDocument config);

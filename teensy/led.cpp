@@ -36,15 +36,23 @@ void Led::setOffsets(float x, float y, float z) {
   offset_x = x;
   offset_y = y;
   offset_z = z;
+};
 
-  apparent_pos_x = pos_x - offset_x;
-  apparent_pos_y = pos_y - offset_y;
-  apparent_pos_z = pos_z - offset_z;
+
+void Led::setViewer(float viewer_x, float viewer_y, float viewer_z) {
+  apparent_pos_x = pos_x + offset_x - viewer_x;
+  apparent_pos_y = pos_y + offset_y - viewer_y;
+  apparent_pos_z = pos_z + offset_z - viewer_z;
 };
 
 
 std::tuple<float, float> Led::setApparentAngles() {
-  apparent_angle_alpha = fmodf(atan2(apparent_pos_x, apparent_pos_y) + 2 * M_PI, 2 * M_PI);
+  if (apparent_pos_y >= 0) {
+    apparent_angle_alpha = fmodf(2 * M_PI + atan(apparent_pos_x / apparent_pos_y), 2 * M_PI);
+  } else {
+    apparent_angle_alpha = fmodf(M_PI + atan(apparent_pos_x / apparent_pos_y), 2 * M_PI);
+  };
+  
   apparent_angle_beta = fmodf(atan2(apparent_pos_z, sqrt(pow(apparent_pos_x, 2.0) + pow(apparent_pos_y, 2.0))), M_PI / 2);
   return std::make_tuple(apparent_angle_alpha, apparent_angle_beta);
 }

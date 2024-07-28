@@ -9,9 +9,9 @@
 #define HWSerial Serial1
 #define POINTER_SIZE 4
 
-#define NUM_LEDS 790
-#define NUM_ELEMENTS 8
-#define NUM_CONTAINERS 1
+#define NUM_LEDS 922
+#define NUM_ELEMENTS 12
+#define NUM_CONTAINERS 2
 
 #define DATA_PIN 11
 #define CLOCK_PIN 13
@@ -42,23 +42,37 @@ void setup() {
 
   FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(strip, NUM_LEDS);
 
-  float min_x = 0.0;
-  float max_x = 4.75;
+  float room_min_x = 0.0;
+  float room_max_x = 4.75;
 
-  float min_y = 0.0;
-  float max_y = 3.35;
+  float room_min_y = 0.0;
+  float room_max_y = 3.35;
 
-  float min_z = 0.40;
-  float max_z = 2.50;
+  float room_min_z = 0.40;
+  float room_max_z = 2.50;
 
-  elements[0] = Element(min_x, max_y, min_z, min_x, max_y, max_z, 69, &leds[0], &strip[0], audio_bins);
-  elements[1] = Element(min_x, max_y, max_z, max_x, max_y, max_z, 149, &leds[69], &strip[69], audio_bins);
-  elements[2] = Element(max_x, max_y, min_z, max_x, max_y, max_z, 69, &leds[218], &strip[218], audio_bins);
-  elements[3] = Element(max_x, max_y, max_z, max_x, min_y, max_z, 108, &leds[287], &strip[287], audio_bins);
-  elements[4] = Element(max_x, min_y, min_z, max_x, min_y, max_z, 69, &leds[395], &strip[395], audio_bins);
-  elements[5] = Element(max_x, min_y, max_z, min_x, min_y, max_z, 149, &leds[464], &strip[464], audio_bins);
-  elements[6] = Element(min_x, min_y, min_z, min_x, min_y, max_z, 69, &leds[613], &strip[613], audio_bins);
-  elements[7] = Element(min_x, min_y, max_z, min_x, max_y, max_z, 108, &leds[682], &strip[682], audio_bins);
+  float table_min_x = 0.0;
+  float table_max_x = 1.28;
+
+  float table_min_y = 0.0;
+  float table_max_y = 0.78;
+
+  float table_z = 0.0;
+
+  elements[0] = Element(room_min_x, room_max_y, room_min_z, room_min_x, room_max_y, room_max_z, 69, &leds[0], &strip[0], audio_bins);
+  elements[1] = Element(room_min_x, room_max_y, room_max_z, room_max_x, room_max_y, room_max_z, 149, &leds[69], &strip[69], audio_bins);
+  elements[2] = Element(room_max_x, room_max_y, room_min_z, room_max_x, room_max_y, room_max_z, 69, &leds[218], &strip[218], audio_bins);
+  elements[3] = Element(room_max_x, room_max_y, room_max_z, room_max_x, room_min_y, room_max_z, 108, &leds[287], &strip[287], audio_bins);
+  elements[4] = Element(room_max_x, room_min_y, room_min_z, room_max_x, room_min_y, room_max_z, 69, &leds[395], &strip[395], audio_bins);
+  elements[5] = Element(room_max_x, room_min_y, room_max_z, room_min_x, room_min_y, room_max_z, 149, &leds[464], &strip[464], audio_bins);
+  elements[6] = Element(room_min_x, room_min_y, room_min_z, room_min_x, room_min_y, room_max_z, 69, &leds[613], &strip[613], audio_bins);
+  elements[7] = Element(room_min_x, room_min_y, room_max_z, room_min_x, room_max_y, room_max_z, 108, &leds[682], &strip[682], audio_bins);
+
+
+  elements[8] = Element(table_min_x, table_max_y, table_z, table_max_x, table_max_y, table_z, 41, &leds[790], &strip[790], audio_bins);
+  elements[9] = Element(table_max_x, table_max_y, table_z, table_max_x, table_min_y, table_z, 25, &leds[831], &strip[831], audio_bins);
+  elements[10] = Element(table_max_x, table_min_y, table_z, table_min_x, table_min_y, table_z, 41, &leds[856], &strip[856], audio_bins);
+  elements[11] = Element(table_min_x, table_min_y, table_z, table_min_x, table_max_y, table_z, 25, &leds[897], &strip[897], audio_bins);
 
   // Temporary audio effect config
   elements[0].audioEffect.dual_bars = false;
@@ -112,9 +126,15 @@ void setup() {
   elements[7].audioEffect.bar_2_bin_end = 131;
 
 
-  containers[0] = Container(8, &elements[0], max_x / 2, max_y / 2, 1.7);
-  containers[0].setElementOffsets();
+  containers[0] = Container(8, &elements[0]);
+  containers[0].setOffsets(0, 0, 0);
+  containers[0].setViewer(2.375, 1.675, 1.6);
   containers[0].setElementApparentAngles();
+
+  containers[1] = Container(4, &elements[8]);
+  containers[1].setOffsets(0.1, 1.43, 0.73);
+  containers[1].setViewer(2.375, 1.675, 1.6);
+  containers[1].setElementApparentAngles();
 
   for (int i=0; i < NUM_LEDS; i++) {
     strip[i] = CRGB::Black;
@@ -141,6 +161,21 @@ void loop() {
       audio_bins[i] = fft.read(i);
     }
   }
+
+  /*Serial.println(leds[897].apparent_pos_x);
+  Serial.println(leds[897].apparent_pos_y);
+  Serial.println(leds[897].apparent_pos_z);
+
+
+  Serial.println(leds[921].apparent_pos_x);
+  Serial.println(leds[921].apparent_pos_y);
+  Serial.println(leds[921].apparent_pos_z);
+
+
+  Serial.println(leds[897].apparent_angle_alpha / M_PI * 180);
+  Serial.println(leds[921].apparent_angle_alpha / M_PI * 180);*/
+
+
 
   if (Serial.available()) {
     Serial.println("reading serial...");

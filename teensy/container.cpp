@@ -7,24 +7,23 @@
 Container::Container() {
   num_elements = 0;
   start_element = NULL;
-
-  origin_x = 0;
-  origin_y = 0;
-  origin_z = 0;
 }
 
-Container::Container(int number_of_elements, Element *first_element, float viewer_x, float viewer_y, float viewer_z) {
+Container::Container(int number_of_elements, Element *first_element) {
   num_elements = number_of_elements;
   start_element = first_element;
-
-  origin_x = viewer_x;
-  origin_y = viewer_y;
-  origin_z = viewer_z;
 };
+
 
 void Container::setElementOffsets() {
   for (int i=0; i < num_elements; i++) {
-    start_element[i].setLedOffsets(origin_x + container_offset_x, origin_y + container_offset_y, origin_z + container_offset_y);
+    start_element[i].setLedOffsets(offset_x, offset_y, offset_z);
+  }
+}
+
+void Container::setElementViewer() {
+  for (int i=0; i < num_elements; i++) {
+    start_element[i].setLedViewer(viewer_x, viewer_y, viewer_z);
   }
 }
 
@@ -42,6 +41,13 @@ void Container::setElementApparentAngles() {
 
 
     std::tie(element_alpha_min, element_alpha_max, element_beta_min, element_beta_max) = start_element[i].setLedApparentAngles();
+
+    /*Serial.print(i);
+    Serial.print(": min: ");
+    Serial.print(element_alpha_min / M_PI * 180);
+    Serial.print("; max: ");
+    Serial.println(element_alpha_max / M_PI * 180);*/
+
 
     if (element_alpha_min < alpha_min) {
       alpha_min = element_alpha_min;
@@ -66,9 +72,9 @@ void Container::setElementApparentAngles() {
   float factor_alpha = 2 * M_PI / range_alpha;
   float factor_beta = 2 * M_PI / range_beta;
 
-  for (int i=0; i < num_elements; i++) {
+  /*for (int i=0; i < num_elements; i++) {
     start_element[i].closeLedApparentAngles(factor_alpha, factor_beta);
-  };
+  };*/
 }
 
 void Container::setStripColours() {
@@ -78,8 +84,17 @@ void Container::setStripColours() {
 }
 
 
-void Container::setContainerOffsets(float offset_x, float offset_y, float offset_z) {
-  container_offset_x = offset_x;
-  container_offset_y = offset_y;
-  container_offset_z = offset_z;
+void Container::setOffsets(float new_offset_x, float new_offset_y, float new_offset_z) {
+  offset_x = new_offset_x;
+  offset_y = new_offset_y;
+  offset_z = new_offset_z;
+  setElementOffsets();
+}
+
+
+void Container::setViewer(float new_viewer_x, float new_viewer_y, float new_viewer_z) {
+  viewer_x = new_viewer_x;
+  viewer_y = new_viewer_y;
+  viewer_z = new_viewer_z;
+  setElementViewer();
 }

@@ -11,13 +11,13 @@ class Led {
     float pos_y;
     float pos_z;
 
-    float apparent_pos_x;
-    float apparent_pos_y;
-    float apparent_pos_z;
-
     float offset_x = 0;
     float offset_y = 0;
     float offset_z = 0;
+
+    float apparent_pos_x;
+    float apparent_pos_y;
+    float apparent_pos_z;
 
     float apparent_angle_alpha;
     float apparent_angle_beta;
@@ -27,7 +27,8 @@ class Led {
     void getPositionString(char* buffer);
     void getApparentPositionString(char* buffer);
     void getApparentAnglesString(char* buffer);
-    void setOffsets(float x, float y, float z);
+    void setOffsets(float offset_x, float offset_y, float offset_z);
+    void setViewer(float viewer_x, float viewer_y, float viewer_z);
     std::tuple<float, float> setApparentAngles();
     void closeApparentAngles(float factor_alpha, float factor_beta);
     

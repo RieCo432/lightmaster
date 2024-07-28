@@ -68,10 +68,17 @@ void Element::setLedOffsets(float offset_x, float offset_y, float offset_z) {
   };
 };
 
+
+void Element::setLedViewer(float viewer_x, float viewer_y, float viewer_z) {
+  for (int i=0; i < num_leds; i++) {
+    start_led[i].setViewer(viewer_x, viewer_y, viewer_z);
+  };
+};
+
 std::tuple<float, float, float, float> Element::setLedApparentAngles() {
-  float alpha_min = 0;
+  float alpha_min = 2 * M_PI;
   float alpha_max = 0;
-  float beta_min = 0;
+  float beta_min = 2 * M_PI;
   float beta_max = 0;
   for (int i=0; i < num_leds; i++) {
     float alpha;
