@@ -1,5 +1,5 @@
 {
-  "elements": [0, 1, 2, 3, 4, 5, 6, 7],
+  "elements": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
   "element_names": [
     "room_vertical_se",
     "room_horizontal_s",
@@ -8,9 +8,13 @@
     "room_vertical_nw",
     "room_horizontal_n",
     "room_vertical_ne",
-    "room_horizontal_e"
+    "room_horizontal_e",
+    "table_south",
+    "table_west",
+    "table_north",
+    "table_east"
   ],
-  "containers": [0],
-  "container_names": ["room"],
-  "container_elements": [[0, 1, 2, 3, 4, 5, 6, 7]]
+  "containers": [0, 1],
+  "container_names": ["room", "table"],
+  "container_elements": [[0, 1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11]]
 }

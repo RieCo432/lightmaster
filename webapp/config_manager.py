@@ -110,13 +110,6 @@ def apply_audio(audio_form: forms.AudioForm):
         effect_config["elements"][element_index]["audio"]["saturation"] = audio_form.saturation.data
         effect_config["elements"][element_index]["audio"]["absolute_range"] = audio_form.absolute_range.data
         effect_config["elements"][element_index]["audio"]["range_to_max"] = audio_form.range_to_max.data
-        effect_config["elements"][element_index]["audio"]["reverse"] = audio_form.reverse.data
-        effect_config["elements"][element_index]["audio"]["dual_bars"] = audio_form.dual_bars.data
-        effect_config["elements"][element_index]["audio"]["middle_out"] = audio_form.middle_out.data
-        effect_config["elements"][element_index]["audio"]["bar_1_bin_start"] = audio_form.bar_1_bin_start.data
-        effect_config["elements"][element_index]["audio"]["bar_1_bin_end"] = audio_form.bar_1_bin_end.data
-        effect_config["elements"][element_index]["audio"]["bar_2_bin_start"] = audio_form.bar_2_bin_start.data
-        effect_config["elements"][element_index]["audio"]["bar_2_bin_end"] = audio_form.bar_2_bin_end.data
         effect_config["elements"][element_index]["audio"]["max_fallback_divider"] = audio_form.max_fallback_divider.data
         effect_config["elements"][element_index]["audio"]["peak_fallback_rate"] = audio_form.peak_fallback_rate.data
 
@@ -149,13 +142,6 @@ def read_audio_to_form(audio_form, element_index):
     audio_form.saturation.data = effect_config["elements"][element_index]["audio"]["saturation"]
     audio_form.absolute_range.data = effect_config["elements"][element_index]["audio"]["absolute_range"]
     audio_form.range_to_max.data = effect_config["elements"][element_index]["audio"]["range_to_max"]
-    audio_form.reverse.data = effect_config["elements"][element_index]["audio"]["reverse"]
-    audio_form.dual_bars.data = effect_config["elements"][element_index]["audio"]["dual_bars"]
-    audio_form.middle_out.data = effect_config["elements"][element_index]["audio"]["middle_out"]
-    audio_form.bar_1_bin_start.data = effect_config["elements"][element_index]["audio"]["bar_1_bin_start"]
-    audio_form.bar_1_bin_end.data = effect_config["elements"][element_index]["audio"]["bar_1_bin_end"]
-    audio_form.bar_2_bin_start.data = effect_config["elements"][element_index]["audio"]["bar_2_bin_start"]
-    audio_form.bar_2_bin_end.data = effect_config["elements"][element_index]["audio"]["bar_2_bin_end"]
     audio_form.max_fallback_divider.data = effect_config["elements"][element_index]["audio"]["max_fallback_divider"]
     audio_form.peak_fallback_rate.data = effect_config["elements"][element_index]["audio"]["peak_fallback_rate"]
 
