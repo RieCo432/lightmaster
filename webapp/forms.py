@@ -69,6 +69,18 @@ class AudioForm(FlaskForm):
     saturation = FloatField("Saturation")
     absolute_range = BooleanField("Absolute Range")
     range_to_max = FloatField("Range to Max")
+    max_fallback_divider = FloatField("Maximum Fallback Divider")
+    peak_fallback_rate = IntegerField("Peak Fallback Rate")
+
+    targets = FormField(TargetForm)
+
+    submit = SubmitField("Apply")
+
+    class Meta:
+        csrf = False
+
+
+class AudioBinsForm(FlaskForm):
     reverse = BooleanField("Reverse")
     dual_bars = BooleanField("Dual Bars")
     middle_out = BooleanField("Middle Out")
@@ -76,8 +88,6 @@ class AudioForm(FlaskForm):
     bar_1_bin_end = IntegerField("Bar 1 Bin End")
     bar_2_bin_start = IntegerField("Bar 2 Bin Start")
     bar_2_bin_end = IntegerField("Bar 2 Bin End")
-    max_fallback_divider = FloatField("Maximum Fallback Divider")
-    peak_fallback_rate = IntegerField("Peak Fallback Rate")
 
     targets = FormField(TargetForm)
 

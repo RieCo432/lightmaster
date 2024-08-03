@@ -66,6 +66,15 @@ def get_elements_with_same_audio_config(element_index):
     return indexes
 
 
+def get_elements_with_same_audio_bins_config(element_index):
+    indexes = []
+    for i in setup_config["elements"]:
+        if effect_config["elements"][i]["audio_bins"] == effect_config["elements"][element_index]["audio_bins"]:
+            indexes.append(i)
+
+    return indexes
+
+
 def apply_effect(effect_form: forms.EffectForm):
     for element_index in get_all_target_elements(effect_form.targets):
         effect_config["elements"][element_index]["effect"]["enabled"] = effect_form.enabled.data
@@ -114,6 +123,19 @@ def apply_audio(audio_form: forms.AudioForm):
     save_config()
 
 
+def apply_audio_bins(audio_bins_form: forms.AudioBinsForm):
+    for element_index in get_all_target_elements(audio_bins_form.targets):
+        effect_config["elements"][element_index]["audio_bins"]["reverse"] = audio_bins_form.reverse.data
+        effect_config["elements"][element_index]["audio_bins"]["dual_bars"] = audio_bins_form.dual_bars.data
+        effect_config["elements"][element_index]["audio_bins"]["middle_out"] = audio_bins_form.middle_out.data
+        effect_config["elements"][element_index]["audio_bins"]["bar_1_bin_start"] = audio_bins_form.bar_1_bin_start.data
+        effect_config["elements"][element_index]["audio_bins"]["bar_1_bin_end"] = audio_bins_form.bar_1_bin_end.data
+        effect_config["elements"][element_index]["audio_bins"]["bar_2_bin_start"] = audio_bins_form.bar_2_bin_start.data
+        effect_config["elements"][element_index]["audio_bins"]["bar_2_bin_end"] = audio_bins_form.bar_2_bin_end.data
+
+    save_config()
+
+
 def read_audio_to_form(audio_form, element_index):
     audio_form.base_effect.data = effect_config["elements"][element_index]["audio"]["base_effect"]
     audio_form.show_peaks.data = effect_config["elements"][element_index]["audio"]["show_peaks"]
@@ -144,6 +166,25 @@ def read_audio_to_form(audio_form, element_index):
     if len(containers) != 0:
         audio_form.targets.apply_to_containers.data = True
         audio_form.targets.container_indexes.data = containers
+
+
+def read_audio_bins_to_form(audio_bins_form, element_index):
+
+    audio_bins_form.reverse.data = effect_config["elements"][element_index]["audio_bins"]["reverse"]
+    audio_bins_form.dual_bars.data = effect_config["elements"][element_index]["audio_bins"]["dual_bars"]
+    audio_bins_form.middle_out.data = effect_config["elements"][element_index]["audio_bins"]["middle_out"]
+    audio_bins_form.bar_1_bin_start.data = effect_config["elements"][element_index]["audio_bins"]["bar_1_bin_start"]
+    audio_bins_form.bar_1_bin_end.data = effect_config["elements"][element_index]["audio_bins"]["bar_1_bin_end"]
+    audio_bins_form.bar_2_bin_start.data = effect_config["elements"][element_index]["audio_bins"]["bar_2_bin_start"]
+    audio_bins_form.bar_2_bin_end.data = effect_config["elements"][element_index]["audio_bins"]["bar_2_bin_end"]
+
+    containers, elements = containerise_elements(get_elements_with_same_audio_bins_config(element_index))
+    if len(elements) != 0:
+        audio_bins_form.targets.apply_to_elements.data = True
+        audio_bins_form.targets.element_indexes.data = elements
+    if len(containers) != 0:
+        audio_bins_form.targets.apply_to_containers.data = True
+        audio_bins_form.targets.container_indexes.data = containers
 
 
 def apply_rainbow(rainbow_form: forms.RainbowForm):
@@ -221,6 +262,20 @@ def get_audio_groups():
     return [[(element_index, setup_config["element_names"][element_index]) for element_index in group_indexes] for group_indexes in audio_groups]
 
 
+def get_audio_bins_groups():
+    audio_bins_parameters = []
+    audio_bins_groups = []
+    for element_index in setup_config["elements"]:
+        if not effect_config["elements"][element_index]["audio_bins"] in audio_bins_parameters:
+            audio_bins_groups.append([element_index])
+            audio_bins_parameters.append(effect_config["elements"][element_index]["audio_bins"])
+        else:
+            group_index = audio_bins_parameters.index(effect_config["elements"][element_index]["audio_bins"])
+            audio_bins_groups[group_index].append(element_index)
+
+    return [[(element_index, setup_config["element_names"][element_index]) for element_index in group_indexes] for group_indexes in audio_bins_groups]
+
+
 def get_effect_summary(element_index):
     return effect_config["elements"][element_index]["effect"]
 
@@ -231,3 +286,7 @@ def get_rainbow_summary(element_index):
 
 def get_audio_summary(element_index):
     return effect_config["elements"][element_index]["audio"]
+
+
+def get_audio_bins_summary(element_index):
+    return effect_config["elements"][element_index]["audio_bins"]

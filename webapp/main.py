@@ -56,7 +56,21 @@ def index():
         }
         audio_groups_formatted.append(formatted_audio_group)
 
-    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted)
+    audio_bins_groups = get_audio_bins_groups()
+    audio_bins_groups_formatted = []
+    for audio_bins_group in audio_bins_groups:
+        containers, elements = containerise_elements_with_names(audio_bins_group)
+        formatted_audio_bins_group = {
+            "link": url_for("bins", element=audio_bins_group[0][0]),
+            "text": ", ".join(
+                [container[1] for container in containers]
+                + [element[1] for element in elements]
+            ),
+            "summary": get_audio_bins_summary(audio_bins_group[0][0])
+        }
+        audio_bins_groups_formatted.append(formatted_audio_bins_group)
+
+    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted)
 
 
 
@@ -97,6 +111,20 @@ def audio():
         read_audio_to_form(audio_form, int(request.args.get("element")))
 
     return render_template("audio.html", audio_form=audio_form)
+
+
+@app.route("/bins", methods=["GET", "POST"])
+def bins():
+    audio_bins_form = AudioBinsForm()
+    if audio_bins_form.validate_on_submit():
+        apply_audio_bins(audio_bins_form)
+        flash("Audio Bins applied")
+        return redirect(url_for("index"))
+    else:
+        read_audio_bins_to_form(audio_bins_form, int(request.args.get("element")))
+
+    return render_template("bins.html", audio_bins_form=audio_bins_form)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=True)

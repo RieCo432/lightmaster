@@ -29,6 +29,15 @@
         {% endfor %}
     </p>
 
+    <p>
+        <h2>Audio Bins Groups</h2>
+        {% for audio_bins_group in audio_bins_groups_formatted %}
+            <a href="{{audio_bins_group['link']}}">Bins for {{ audio_bins_group["text"] }}</a>
+            {{ audio_bins_group["summary"] }}
+            <br>
+        {% endfor %}
+    </p>
+
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
