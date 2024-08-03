@@ -75,55 +75,55 @@ void setup() {
   elements[11] = Element(table_min_x, table_min_y, table_z, table_min_x, table_max_y, table_z, 25, &leds[897], &strip[897], audio_bins);
 
   // Temporary audio effect config
-  elements[0].audioEffect.dual_bars = false;
-  elements[0].audioEffect.reverse = true;
-  elements[0].audioEffect.bar_1_bin_start = 2;
-  elements[0].audioEffect.bar_1_bin_end = 3;
+  elements[0].audioBins.dual_bars = false;
+  elements[0].audioBins.reverse = true;
+  elements[0].audioBins.bar_1_bin_start = 2;
+  elements[0].audioBins.bar_1_bin_end = 3;
 
-  elements[2].audioEffect.dual_bars = false;
-  elements[2].audioEffect.reverse = true;
-  elements[2].audioEffect.bar_1_bin_start = 2;
-  elements[2].audioEffect.bar_1_bin_end = 3;
-
-
-  elements[4].audioEffect.dual_bars = false;
-  elements[4].audioEffect.reverse = true;
-  elements[4].audioEffect.bar_1_bin_start = 4;
-  elements[4].audioEffect.bar_1_bin_end = 6;
-
-  elements[6].audioEffect.dual_bars = false;
-  elements[6].audioEffect.reverse = true;
-  elements[6].audioEffect.bar_1_bin_start = 4;
-  elements[6].audioEffect.bar_1_bin_end = 6;
+  elements[2].audioBins.dual_bars = false;
+  elements[2].audioBins.reverse = true;
+  elements[2].audioBins.bar_1_bin_start = 2;
+  elements[2].audioBins.bar_1_bin_end = 3;
 
 
-  elements[1].audioEffect.dual_bars = true;
-  elements[1].audioEffect.middle_out = false;
-  elements[1].audioEffect.bar_1_bin_start = 7;
-  elements[1].audioEffect.bar_1_bin_end = 10;
-  elements[1].audioEffect.bar_2_bin_start = 11;
-  elements[1].audioEffect.bar_2_bin_end = 15;
+  elements[4].audioBins.dual_bars = false;
+  elements[4].audioBins.reverse = true;
+  elements[4].audioBins.bar_1_bin_start = 4;
+  elements[4].audioBins.bar_1_bin_end = 6;
 
-  elements[3].audioEffect.dual_bars = true;
-  elements[3].audioEffect.middle_out = false;
-  elements[3].audioEffect.bar_1_bin_start = 33;
-  elements[3].audioEffect.bar_1_bin_end = 46;
-  elements[3].audioEffect.bar_2_bin_start = 47;
-  elements[3].audioEffect.bar_2_bin_end = 66;
+  elements[6].audioBins.dual_bars = false;
+  elements[6].audioBins.reverse = true;
+  elements[6].audioBins.bar_1_bin_start = 4;
+  elements[6].audioBins.bar_1_bin_end = 6;
 
-  elements[5].audioEffect.dual_bars = true;
-  elements[5].audioEffect.middle_out = false;
-  elements[5].audioEffect.bar_1_bin_start = 16;
-  elements[5].audioEffect.bar_1_bin_end = 22;
-  elements[5].audioEffect.bar_2_bin_start = 23;
-  elements[5].audioEffect.bar_2_bin_end = 32;
 
-  elements[7].audioEffect.dual_bars = true;
-  elements[7].audioEffect.middle_out = false;
-  elements[7].audioEffect.bar_1_bin_start = 67;
-  elements[7].audioEffect.bar_1_bin_end = 93;
-  elements[7].audioEffect.bar_2_bin_start = 94;
-  elements[7].audioEffect.bar_2_bin_end = 131;
+  elements[1].audioBins.dual_bars = true;
+  elements[1].audioBins.middle_out = false;
+  elements[1].audioBins.bar_1_bin_start = 7;
+  elements[1].audioBins.bar_1_bin_end = 10;
+  elements[1].audioBins.bar_2_bin_start = 11;
+  elements[1].audioBins.bar_2_bin_end = 15;
+
+  elements[3].audioBins.dual_bars = true;
+  elements[3].audioBins.middle_out = false;
+  elements[3].audioBins.bar_1_bin_start = 33;
+  elements[3].audioBins.bar_1_bin_end = 46;
+  elements[3].audioBins.bar_2_bin_start = 47;
+  elements[3].audioBins.bar_2_bin_end = 66;
+
+  elements[5].audioBins.dual_bars = true;
+  elements[5].audioBins.middle_out = false;
+  elements[5].audioBins.bar_1_bin_start = 16;
+  elements[5].audioBins.bar_1_bin_end = 22;
+  elements[5].audioBins.bar_2_bin_start = 23;
+  elements[5].audioBins.bar_2_bin_end = 32;
+
+  elements[7].audioBins.dual_bars = true;
+  elements[7].audioBins.middle_out = false;
+  elements[7].audioBins.bar_1_bin_start = 67;
+  elements[7].audioBins.bar_1_bin_end = 93;
+  elements[7].audioBins.bar_2_bin_start = 94;
+  elements[7].audioBins.bar_2_bin_end = 131;
 
 
   containers[0] = Container(8, &elements[0]);
@@ -201,6 +201,8 @@ void loop() {
         elements[target_index].setAudioEffect(serial_config["data"]);
       } else if (strcmp(target_config, "rainbow") == 0) {
         elements[target_index].setRainbowEffect(serial_config["data"]);
+      } else if (strcmp(target_config, "audioBins") == 0) {
+        elements[target_index].setAudioBins(serial_config["data"]);
       }
     }
   }

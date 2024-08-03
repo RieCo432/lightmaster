@@ -33,6 +33,13 @@ typedef struct {
 
   bool absolute_range;
   float range_to_max;
+
+  float max_fallback_divider;
+  int peak_fallback_rate;
+
+} AudioEffect;
+
+typedef struct {
   bool reverse;
 
   bool dual_bars;
@@ -44,11 +51,7 @@ typedef struct {
 
   int bar_2_bin_start;
   int bar_2_bin_end;
-
-  float max_fallback_divider;
-  int peak_fallback_rate;
-
-} AudioEffect;
+} AudioBins;
 
 float normalise_bin_amplitude(float bin_amplitude);
 

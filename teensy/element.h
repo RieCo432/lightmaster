@@ -64,6 +64,12 @@ class Element {
       
       .absolute_range = true,
       .range_to_max = 30,
+
+      .max_fallback_divider = 1.3,
+      .peak_fallback_rate = 1
+    };
+
+    AudioBins audioBins {
       .reverse = false,
 
       .dual_bars = true,
@@ -75,9 +81,6 @@ class Element {
 
       .bar_2_bin_start = 0,
       .bar_2_bin_end = 10,
-
-      .max_fallback_divider = 1.3,
-      .peak_fallback_rate = 1
     };
 
     Element();
@@ -90,6 +93,7 @@ class Element {
     void setEffect(JsonDocument config);
     void setAudioEffect(JsonDocument config);
     void setRainbowEffect(JsonDocument config);
+    void setAudioBins(JsonDocument config);
     void setStripColours();
     void applyRainbowBackground();
     void applySpectrumBarsBackground();
