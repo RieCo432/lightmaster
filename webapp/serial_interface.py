@@ -6,19 +6,17 @@ from time import sleep
 
 import serial
 
-
 connected = False
 attempts_left = 60
 while not connected and attempts_left > 1:
     try:
+        sleep(5)
         ser = serial.Serial('/dev/serial0', 9600, timeout=2)
         ser.flush()
         connected = True
         print("connected!")
     except serial.serialutil.SerialException:
-        sleep(5)
         attempts_left -= 1
-        pass
 
 if not connected:
     exit(1)
@@ -27,6 +25,7 @@ if not connected:
 def write_to_serial(json_dict):
     line = (json.dumps(json_dict) + "\n").encode('utf-8')
     ser.write(line)
+    ser.flush()
     print("written:", line)
     if ser.in_waiting:
         line = ser.readline().decode('utf-8').rstrip()
@@ -55,6 +54,8 @@ def send_config_factory():
 
     return send_config
 
+
+send_config = send_config_factory()
 
 def send_entire_config():
     effect_config = read_effect_config()

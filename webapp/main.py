@@ -4,16 +4,12 @@ from flask_bootstrap import Bootstrap5
 
 from forms import EffectForm, get_all_target_elements
 from config_manager import *
-from serial_interface import send_config_factory, send_entire_config
+from serial_interface import send_config, send_entire_config
 
 
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
-
-
-send_config = send_config_factory()
-
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
