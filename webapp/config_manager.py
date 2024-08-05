@@ -4,8 +4,15 @@ from forms import *
 
 effect_config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "effect_config.json")
 
-with open(effect_config_file_path, "r") as fin:
-    effect_config = json.load(fin)
+
+def read_effect_config():
+    with open(effect_config_file_path, "r") as fin:
+        config = json.load(fin)
+
+    return config
+
+
+effect_config = read_effect_config()
 
 
 def save_config():

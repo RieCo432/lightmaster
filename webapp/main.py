@@ -4,11 +4,15 @@ from flask_bootstrap import Bootstrap5
 
 from forms import EffectForm, get_all_target_elements
 from config_manager import *
+from serial_interface import send_config_factory
 
 
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
+
+
+send_config = send_config_factory()
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -73,12 +77,12 @@ def index():
     return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted)
 
 
-
 @app.route("/effect", methods=["GET", "POST"])
 def effect():
     effect_form = EffectForm()
     if effect_form.validate_on_submit():
         apply_effect(effect_form)
+        send_config()
         flash("Effect applied")
         return redirect(url_for("index"))
     else:
@@ -92,6 +96,7 @@ def rainbow():
     rainbow_form = RainbowForm()
     if rainbow_form.validate_on_submit():
         apply_rainbow(rainbow_form)
+        send_config()
         flash("Rainbow applied")
         return redirect(url_for("index"))
     else:
@@ -105,6 +110,7 @@ def audio():
     audio_form = AudioForm()
     if audio_form.validate_on_submit():
         apply_audio(audio_form)
+        send_config()
         flash("Audio applied")
         return redirect(url_for("index"))
     else:
@@ -118,6 +124,7 @@ def bins():
     audio_bins_form = AudioBinsForm()
     if audio_bins_form.validate_on_submit():
         apply_audio_bins(audio_bins_form)
+        send_config()
         flash("Audio Bins applied")
         return redirect(url_for("index"))
     else:
