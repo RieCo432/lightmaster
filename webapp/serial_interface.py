@@ -26,3 +26,13 @@ def send_config_factory():
 
     return send_config
 
+
+def send_entire_config():
+    effect_config = read_effect_config()
+
+    for element_index in setup_config["elements"]:
+        for config_type in effect_config["elements"][element_index].keys():
+            data_to_send = effect_config["elements"][element_index][config_type]
+
+            json_to_send = {"target": "element", "index": element_index, "type": config_type, "data": data_to_send}
+            print(json.dumps(json_to_send))

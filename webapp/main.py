@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap5
 
 from forms import EffectForm, get_all_target_elements
 from config_manager import *
-from serial_interface import send_config_factory
+from serial_interface import send_config_factory, send_entire_config
 
 
 app = Flask(__name__)
@@ -134,4 +134,5 @@ def bins():
 
 
 if __name__ == "__main__":
+    send_entire_config()
     app.run(host="0.0.0.0", port=80, debug=True)
