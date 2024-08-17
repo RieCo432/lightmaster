@@ -11,6 +11,8 @@ app = Flask(__name__)
 bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
 
+send_entire_config()
+
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 def index():
@@ -130,5 +132,4 @@ def bins():
 
 
 if __name__ == "__main__":
-    send_entire_config()
     app.run(host="0.0.0.0", port=80, debug=True)
