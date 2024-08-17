@@ -159,5 +159,14 @@ def bins():
     return render_template("bins.html", audio_bins_form=audio_bins_form)
 
 
+@app.route("/sync-config")
+def sync_config():
+    send_entire_config()
+
+    flash("Config Synced")
+
+    return redirect(url_for("index"))
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=True)
