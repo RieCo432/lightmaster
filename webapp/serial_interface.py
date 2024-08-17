@@ -66,3 +66,7 @@ def send_entire_config():
 
             json_to_send = {"target": "element", "index": element_index, "type": config_type, "data": data_to_send}
             write_to_serial(json_to_send)
+
+
+if __name__ == "__main__":
+    send_entire_config()

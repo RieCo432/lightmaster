@@ -21,6 +21,14 @@ typedef struct {
 typedef struct {
   char baseEffect[16];
   bool show_peaks;
+  
+  float max_fallback_divider;
+  int peak_fallback_rate;
+
+} AudioEffect;
+
+
+typedef struct {
   float hue_offset_low;
   float hue_offset_high;
   float hue_offset_peak;
@@ -33,11 +41,7 @@ typedef struct {
 
   bool absolute_range;
   float range_to_max;
-
-  float max_fallback_divider;
-  int peak_fallback_rate;
-
-} AudioEffect;
+} SpectrumBars;
 
 typedef struct {
   bool reverse;

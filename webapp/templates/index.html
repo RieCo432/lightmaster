@@ -30,6 +30,15 @@
     </p>
 
     <p>
+        <h2>Spectrum Bars Groups</h2>
+        {% for spectrum_bars_group in spectrum_bars_groups_formatted %}
+            <a href="{{spectrum_bars_group['link']}}">Spectrum Bars for {{ spectrum_bars_group["text"] }}</a>
+            {{ spectrum_bars_group["summary"] }}
+            <br>
+        {% endfor %}
+    </p>
+
+    <p>
         <h2>Audio Bins Groups</h2>
         {% for audio_bins_group in audio_bins_groups_formatted %}
             <a href="{{audio_bins_group['link']}}">Bins for {{ audio_bins_group["text"] }}</a>

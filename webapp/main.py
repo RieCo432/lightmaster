@@ -58,6 +58,20 @@ def index():
         }
         audio_groups_formatted.append(formatted_audio_group)
 
+    spectrum_bars_groups = get_spectrum_bars_groups()
+    spectrum_bars_groups_formatted = []
+    for spectrum_bars_group in spectrum_bars_groups:
+        containers, elements = containerise_elements_with_names(spectrum_bars_group)
+        formatted_spectrum_bars_group = {
+            "link": url_for("spectrum_bars", element=spectrum_bars_group[0][0]),
+            "text": ", ".join(
+                [container[1] for container in containers]
+                + [element[1] for element in elements]
+            ),
+            "summary": get_spectrum_bars_summary(spectrum_bars_group[0][0])
+        }
+        spectrum_bars_groups_formatted.append(formatted_spectrum_bars_group)
+
     audio_bins_groups = get_audio_bins_groups()
     audio_bins_groups_formatted = []
     for audio_bins_group in audio_bins_groups:
@@ -72,7 +86,7 @@ def index():
         }
         audio_bins_groups_formatted.append(formatted_audio_bins_group)
 
-    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted)
+    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted)
 
 
 @app.route("/effect", methods=["GET", "POST"])
@@ -115,6 +129,20 @@ def audio():
         read_audio_to_form(audio_form, int(request.args.get("element")))
 
     return render_template("audio.html", audio_form=audio_form)
+
+
+@app.route("/spectrum-bars", methods=["GET", "POST"])
+def spectrum_bars():
+    spectrum_bars_form = SpectrumBarsForm()
+    if spectrum_bars_form.validate_on_submit():
+        apply_spectrum_bars(spectrum_bars_form)
+        send_config()
+        flash("Spectrum bars applied")
+        return redirect(url_for("index"))
+    else:
+        read_spectrum_bars_to_form(spectrum_bars_form, int(request.args.get("element")))
+
+    return render_template("spectrum-bars.html", spectrum_bars_form=spectrum_bars_form)
 
 
 @app.route("/bins", methods=["GET", "POST"])

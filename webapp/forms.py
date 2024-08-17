@@ -46,7 +46,7 @@ def get_all_target_elements(target_form):
 
 class EffectForm(FlaskForm):
     enabled = BooleanField("Enabled")
-    effect_name = SelectField('Effect Name', choices=[("rainbow", "Rainbow"), ("audio", "Audio")])
+    effect_name = SelectField('Effect Name', choices=[("rainbow", "Rainbow"), ("audio", "Audio"), ("spectrum_bars", "SpectrumBars")])
 
     targets = FormField(TargetForm)
 
@@ -59,6 +59,18 @@ class EffectForm(FlaskForm):
 class AudioForm(FlaskForm):
     base_effect = SelectField('Base Effect', choices=[("rainbow", "Rainbow"), ("spectrumBars", "Spectrum Bars")])
     show_peaks = BooleanField("Show Peaks")
+    max_fallback_divider = FloatField("Maximum Fallback Divider")
+    peak_fallback_rate = IntegerField("Peak Fallback Rate")
+
+    targets = FormField(TargetForm)
+
+    submit = SubmitField("Apply")
+
+    class Meta:
+        csrf = False
+
+
+class SpectrumBarsForm(FlaskForm):
     hue_offset_low = FloatField("Hue Offset Low")
     hue_offset_high = FloatField("Hue Offset High")
     hue_offset_peak = FloatField("Hue Offset Peak")
@@ -69,8 +81,6 @@ class AudioForm(FlaskForm):
     saturation = FloatField("Saturation")
     absolute_range = BooleanField("Absolute Range")
     range_to_max = FloatField("Range to Max")
-    max_fallback_divider = FloatField("Maximum Fallback Divider")
-    peak_fallback_rate = IntegerField("Peak Fallback Rate")
 
     targets = FormField(TargetForm)
 

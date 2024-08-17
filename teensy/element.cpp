@@ -34,6 +34,9 @@ Element::Element(float from_x, float from_y, float from_z, float to_x, float to_
       
   num_leds = length;
 
+  bar_1_peak_index = round(num_leds / 2);
+  bar_2_peak_index = round(num_leds / 2);
+
   start_led = first_led;
   strip_start = strip;
 
@@ -117,18 +120,22 @@ void Element::setEffect(JsonDocument config) {
 void Element::setAudioEffect(JsonDocument config) {
   if (config.containsKey("base_effect")) strcpy(audioEffect.baseEffect, config["base_effect"]);
   if (config.containsKey("show_peaks")) audioEffect.show_peaks = config["show_peaks"];
-  if (config.containsKey("hue_offset_low")) audioEffect.hue_offset_low = config["hue_offset_low"];
-  if (config.containsKey("hue_offset_high")) audioEffect.hue_offset_high = config["hue_offset_high"];
-  if (config.containsKey("hue_offset_peak")) audioEffect.hue_offset_peak = config["hue_offset_peak"];
-  if (config.containsKey("hue_start")) audioEffect.hue_start = config["hue_start"];
-  if (config.containsKey("hue_end")) audioEffect.hue_end = config["hue_end"];
-  if (config.containsKey("period")) audioEffect.period = config["period"];
-  if (config.containsKey("value")) audioEffect.value = config["value"];
-  if (config.containsKey("saturation")) audioEffect.saturation = config["saturation"];
-  if (config.containsKey("absolute_range")) audioEffect.absolute_range = config["absolute_range"];
-  if (config.containsKey("range_to_max")) audioEffect.range_to_max = config["range_to_max"];
   if (config.containsKey("max_fallback_divider")) audioEffect.max_fallback_divider = config["max_fallback_divider"];
   if (config.containsKey("peak_fallback_rate")) audioEffect.peak_fallback_rate = config["peak_fallback_rate"];
+}
+
+
+void Element::setSpectrumBars(JsonDocument config) {
+  if (config.containsKey("hue_offset_low")) spectrumBars.hue_offset_low = config["hue_offset_low"];
+  if (config.containsKey("hue_offset_high")) spectrumBars.hue_offset_high = config["hue_offset_high"];
+  if (config.containsKey("hue_offset_peak")) spectrumBars.hue_offset_peak = config["hue_offset_peak"];
+  if (config.containsKey("hue_start")) spectrumBars.hue_start = config["hue_start"];
+  if (config.containsKey("hue_end")) spectrumBars.hue_end = config["hue_end"];
+  if (config.containsKey("period")) spectrumBars.period = config["period"];
+  if (config.containsKey("value")) spectrumBars.value = config["value"];
+  if (config.containsKey("saturation")) spectrumBars.saturation = config["saturation"];
+  if (config.containsKey("absolute_range")) spectrumBars.absolute_range = config["absolute_range"];
+  if (config.containsKey("range_to_max")) spectrumBars.range_to_max = config["range_to_max"];
 }
 
 void Element::setAudioBins(JsonDocument config) {
@@ -161,9 +168,9 @@ void Element::applyRainbowBackground() {
 void Element::applySpectrumBarsBackground() {
 
 
-  float period = audioEffect.period;
-  float hue_start = audioEffect.hue_start / 180 * M_PI;
-  float hue_end = audioEffect.hue_end / 180 * M_PI;
+  float period = spectrumBars.period;
+  float hue_start = spectrumBars.hue_start / 180 * M_PI;
+  float hue_end = spectrumBars.hue_end / 180 * M_PI;
 
   float hue_range = hue_end - hue_start;
 
@@ -189,27 +196,27 @@ void Element::applySpectrumBarsBackground() {
     }
   }
 
-  int saturation_255 = round(audioEffect.saturation * 255);
-  int value_255 = round(audioEffect.value * 255);
+  int saturation_255 = round(spectrumBars.saturation * 255);
+  int value_255 = round(spectrumBars.value * 255);
 
-  float hue_offset_low = audioEffect.hue_offset_low / 180 * M_PI;
-  float hue_offset_high = audioEffect.hue_offset_high / 180 * M_PI;
-  float hue_offset_peak = audioEffect.hue_offset_peak / 180 * M_PI;
+  float hue_offset_low = spectrumBars.hue_offset_low / 180 * M_PI;
+  float hue_offset_high = spectrumBars.hue_offset_high / 180 * M_PI;
+  float hue_offset_peak = spectrumBars.hue_offset_peak / 180 * M_PI;
 
 
-  float hue_low = fmodf(final_hue_offset + audioEffect.hue_offset_low / 180 * M_PI, 2 * M_PI);
-  float hue_high = fmodf(final_hue_offset + audioEffect.hue_offset_high / 180 * M_PI, 2* M_PI);
-  float hue_peak = fmodf(final_hue_offset + audioEffect.hue_offset_peak / 180 * M_PI, 2* M_PI);
+  float hue_low = fmodf(final_hue_offset + spectrumBars.hue_offset_low / 180 * M_PI, 2 * M_PI);
+  float hue_high = fmodf(final_hue_offset + spectrumBars.hue_offset_high / 180 * M_PI, 2* M_PI);
+  float hue_peak = fmodf(final_hue_offset + spectrumBars.hue_offset_peak / 180 * M_PI, 2* M_PI);
 
   int max_num_leds;
 
   int hues_255[num_leds];
 
   if (!audioBins.dual_bars) {
-    if (audioEffect.absolute_range) {
-      max_num_leds = min(round(audioEffect.range_to_max), num_leds);
+    if (spectrumBars.absolute_range) {
+      max_num_leds = min(round(spectrumBars.range_to_max), num_leds);
     } else {
-      max_num_leds = round(num_leds * audioEffect.range_to_max);
+      max_num_leds = round(num_leds * spectrumBars.range_to_max);
     }
 
     float hue_radians_shift_per_led = (hue_offset_high - hue_offset_low) / max_num_leds;
@@ -233,10 +240,10 @@ void Element::applySpectrumBarsBackground() {
     }
   } else if (audioBins.dual_bars) {
 
-    if (audioEffect.absolute_range) {
-      max_num_leds = min(round(audioEffect.range_to_max), round(num_leds / 2));
+    if (spectrumBars.absolute_range) {
+      max_num_leds = min(round(spectrumBars.range_to_max), round(num_leds / 2));
     } else {
-      max_num_leds = ceil(num_leds / 2 * audioEffect.range_to_max);
+      max_num_leds = ceil(num_leds / 2 * spectrumBars.range_to_max);
     }
 
     float hue_radians_shift_per_led = (hue_offset_high - hue_offset_low) / max_num_leds;
@@ -434,6 +441,8 @@ void Element::setStripColours() {
       }
 
       applyAudioMask();
+    } else if (strcmp(effect.name, "spectrum_bars") == 0) {
+      applySpectrumBarsBackground();
     };
   }
 }

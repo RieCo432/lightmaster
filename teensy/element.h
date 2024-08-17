@@ -29,8 +29,8 @@ class Element {
     int bar_1_max_index = 0;
     int bar_2_max_index = 0;
 
-    int bar_1_peak_index = 10;
-    int bar_2_peak_index = 60;
+    int bar_1_peak_index = 5;
+    int bar_2_peak_index = 5;
 
     bool *audio_mask;
 
@@ -53,6 +53,12 @@ class Element {
     AudioEffect audioEffect = {
       .baseEffect = "rainbow",
       .show_peaks = true,
+
+      .max_fallback_divider = 1.3,
+      .peak_fallback_rate = 1
+    };
+
+    SpectrumBars spectrumBars = {
       .hue_offset_low = 0,
       .hue_offset_high = 120,
       .hue_offset_peak = 240,
@@ -64,9 +70,6 @@ class Element {
       
       .absolute_range = true,
       .range_to_max = 30,
-
-      .max_fallback_divider = 1.3,
-      .peak_fallback_rate = 1
     };
 
     AudioBins audioBins {
@@ -94,6 +97,7 @@ class Element {
     void setAudioEffect(JsonDocument config);
     void setRainbowEffect(JsonDocument config);
     void setAudioBins(JsonDocument config);
+    void setSpectrumBars(JsonDocument config);
     void setStripColours();
     void applyRainbowBackground();
     void applySpectrumBarsBackground();

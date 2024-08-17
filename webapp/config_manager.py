@@ -73,6 +73,15 @@ def get_elements_with_same_audio_config(element_index):
     return indexes
 
 
+def get_elements_with_same_spectrum_bars_config(element_index):
+    indexes = []
+    for i in setup_config["elements"]:
+        if effect_config["elements"][i]["spectrum_bars"] == effect_config["elements"][element_index]["spectrum_bars"]:
+            indexes.append(i)
+
+    return indexes
+
+
 def get_elements_with_same_audio_bins_config(element_index):
     indexes = []
     for i in setup_config["elements"]:
@@ -107,18 +116,24 @@ def apply_audio(audio_form: forms.AudioForm):
     for element_index in get_all_target_elements(audio_form.targets):
         effect_config["elements"][element_index]["audio"]["base_effect"] = audio_form.base_effect.data
         effect_config["elements"][element_index]["audio"]["show_peaks"] = audio_form.show_peaks.data
-        effect_config["elements"][element_index]["audio"]["hue_offset_low"] = audio_form.hue_offset_low.data
-        effect_config["elements"][element_index]["audio"]["hue_offset_high"] = audio_form.hue_offset_high.data
-        effect_config["elements"][element_index]["audio"]["hue_offset_peak"] = audio_form.hue_offset_peak.data
-        effect_config["elements"][element_index]["audio"]["hue_start"] = audio_form.hue_start.data
-        effect_config["elements"][element_index]["audio"]["hue_end"] = audio_form.hue_end.data
-        effect_config["elements"][element_index]["audio"]["period"] = audio_form.period.data
-        effect_config["elements"][element_index]["audio"]["value"] = audio_form.value.data
-        effect_config["elements"][element_index]["audio"]["saturation"] = audio_form.saturation.data
-        effect_config["elements"][element_index]["audio"]["absolute_range"] = audio_form.absolute_range.data
-        effect_config["elements"][element_index]["audio"]["range_to_max"] = audio_form.range_to_max.data
         effect_config["elements"][element_index]["audio"]["max_fallback_divider"] = audio_form.max_fallback_divider.data
         effect_config["elements"][element_index]["audio"]["peak_fallback_rate"] = audio_form.peak_fallback_rate.data
+
+    save_config()
+
+
+def apply_spectrum_bars(spectrum_bars_form: forms.SpectrumBarsForm):
+    for element_index in get_all_target_elements(spectrum_bars_form.targets):
+        effect_config["elements"][element_index]["audio"]["hue_offset_low"] = spectrum_bars_form.hue_offset_low.data
+        effect_config["elements"][element_index]["audio"]["hue_offset_high"] = spectrum_bars_form.hue_offset_high.data
+        effect_config["elements"][element_index]["audio"]["hue_offset_peak"] = spectrum_bars_form.hue_offset_peak.data
+        effect_config["elements"][element_index]["audio"]["hue_start"] = spectrum_bars_form.hue_start.data
+        effect_config["elements"][element_index]["audio"]["hue_end"] = spectrum_bars_form.hue_end.data
+        effect_config["elements"][element_index]["audio"]["period"] = spectrum_bars_form.period.data
+        effect_config["elements"][element_index]["audio"]["value"] = spectrum_bars_form.value.data
+        effect_config["elements"][element_index]["audio"]["saturation"] = spectrum_bars_form.saturation.data
+        effect_config["elements"][element_index]["audio"]["absolute_range"] = spectrum_bars_form.absolute_range.data
+        effect_config["elements"][element_index]["audio"]["range_to_max"] = spectrum_bars_form.range_to_max.data
 
     save_config()
 
@@ -139,16 +154,6 @@ def apply_audio_bins(audio_bins_form: forms.AudioBinsForm):
 def read_audio_to_form(audio_form, element_index):
     audio_form.base_effect.data = effect_config["elements"][element_index]["audio"]["base_effect"]
     audio_form.show_peaks.data = effect_config["elements"][element_index]["audio"]["show_peaks"]
-    audio_form.hue_offset_low.data = effect_config["elements"][element_index]["audio"]["hue_offset_low"]
-    audio_form.hue_offset_high.data = effect_config["elements"][element_index]["audio"]["hue_offset_high"]
-    audio_form.hue_offset_peak.data = effect_config["elements"][element_index]["audio"]["hue_offset_peak"]
-    audio_form.hue_start.data = effect_config["elements"][element_index]["audio"]["hue_start"]
-    audio_form.hue_end.data = effect_config["elements"][element_index]["audio"]["hue_end"]
-    audio_form.period.data = effect_config["elements"][element_index]["audio"]["period"]
-    audio_form.value.data = effect_config["elements"][element_index]["audio"]["value"]
-    audio_form.saturation.data = effect_config["elements"][element_index]["audio"]["saturation"]
-    audio_form.absolute_range.data = effect_config["elements"][element_index]["audio"]["absolute_range"]
-    audio_form.range_to_max.data = effect_config["elements"][element_index]["audio"]["range_to_max"]
     audio_form.max_fallback_divider.data = effect_config["elements"][element_index]["audio"]["max_fallback_divider"]
     audio_form.peak_fallback_rate.data = effect_config["elements"][element_index]["audio"]["peak_fallback_rate"]
 
@@ -159,6 +164,27 @@ def read_audio_to_form(audio_form, element_index):
     if len(containers) != 0:
         audio_form.targets.apply_to_containers.data = True
         audio_form.targets.container_indexes.data = containers
+
+
+def read_spectrum_bars_to_form(spectrum_bars_form, element_index):
+    spectrum_bars_form.hue_offset_low.data = effect_config["elements"][element_index]["spectrum_bars"]["hue_offset_low"]
+    spectrum_bars_form.hue_offset_high.data = effect_config["elements"][element_index]["spectrum_bars"]["hue_offset_high"]
+    spectrum_bars_form.hue_offset_peak.data = effect_config["elements"][element_index]["spectrum_bars"]["hue_offset_peak"]
+    spectrum_bars_form.hue_start.data = effect_config["elements"][element_index]["spectrum_bars"]["hue_start"]
+    spectrum_bars_form.hue_end.data = effect_config["elements"][element_index]["spectrum_bars"]["hue_end"]
+    spectrum_bars_form.period.data = effect_config["elements"][element_index]["spectrum_bars"]["period"]
+    spectrum_bars_form.value.data = effect_config["elements"][element_index]["spectrum_bars"]["value"]
+    spectrum_bars_form.saturation.data = effect_config["elements"][element_index]["spectrum_bars"]["saturation"]
+    spectrum_bars_form.absolute_range.data = effect_config["elements"][element_index]["spectrum_bars"]["absolute_range"]
+    spectrum_bars_form.range_to_max.data = effect_config["elements"][element_index]["spectrum_bars"]["range_to_max"]
+
+    containers, elements = containerise_elements(get_elements_with_same_spectrum_bars_config(element_index))
+    if len(elements) != 0:
+        spectrum_bars_form.targets.apply_to_elements.data = True
+        spectrum_bars_form.targets.element_indexes.data = elements
+    if len(containers) != 0:
+        spectrum_bars_form.targets.apply_to_containers.data = True
+        spectrum_bars_form.targets.container_indexes.data = containers
 
 
 def read_audio_bins_to_form(audio_bins_form, element_index):
@@ -255,6 +281,20 @@ def get_audio_groups():
     return [[(element_index, setup_config["element_names"][element_index]) for element_index in group_indexes] for group_indexes in audio_groups]
 
 
+def get_spectrum_bars_groups():
+    spectrum_bars_parameters = []
+    spectrum_bars_groups = []
+    for element_index in setup_config["elements"]:
+        if not effect_config["elements"][element_index]["spectrum_bars"] in spectrum_bars_parameters:
+            spectrum_bars_groups.append([element_index])
+            spectrum_bars_parameters.append(effect_config["elements"][element_index]["spectrum_bars"])
+        else:
+            group_index = spectrum_bars_parameters.index(effect_config["elements"][element_index]["spectrum_bars"])
+            spectrum_bars_groups[group_index].append(element_index)
+
+    return [[(element_index, setup_config["element_names"][element_index]) for element_index in group_indexes] for group_indexes in spectrum_bars_groups]
+
+
 def get_audio_bins_groups():
     audio_bins_parameters = []
     audio_bins_groups = []
@@ -279,6 +319,10 @@ def get_rainbow_summary(element_index):
 
 def get_audio_summary(element_index):
     return effect_config["elements"][element_index]["audio"]
+
+
+def get_spectrum_bars_summary(element_index):
+    return effect_config["elements"][element_index]["spectrum_bars"]
 
 
 def get_audio_bins_summary(element_index):

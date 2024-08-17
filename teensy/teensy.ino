@@ -128,6 +128,8 @@ void loop() {
         elements[target_index].setAudioEffect(serial_config["data"]);
       } else if (strcmp(target_config, "rainbow") == 0) {
         elements[target_index].setRainbowEffect(serial_config["data"]);
+      } else if (strcmp(target_config, "spectrum_bars") == 0) {
+        elements[target_index].setSpectrumBars(serial_config["data"]);
       } else if (strcmp(target_config, "audio_bins") == 0) {
         elements[target_index].setAudioBins(serial_config["data"]);
       }
