@@ -38,6 +38,10 @@ float audio_bins[512];
 
 
 void setup() {
+  HWSerial.setTX(1);
+  HWSerial.setRX(0);
+  HWSerial.begin(9600);
+
   AudioMemory(12);
 
   FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(strip, NUM_LEDS);
@@ -74,57 +78,6 @@ void setup() {
   elements[10] = Element(table_max_x, table_min_y, table_z, table_min_x, table_min_y, table_z, 41, &leds[856], &strip[856], audio_bins);
   elements[11] = Element(table_min_x, table_min_y, table_z, table_min_x, table_max_y, table_z, 25, &leds[897], &strip[897], audio_bins);
 
-  // Temporary audio effect config
-  elements[0].audioBins.dual_bars = false;
-  elements[0].audioBins.reverse = true;
-  elements[0].audioBins.bar_1_bin_start = 2;
-  elements[0].audioBins.bar_1_bin_end = 3;
-
-  elements[2].audioBins.dual_bars = false;
-  elements[2].audioBins.reverse = true;
-  elements[2].audioBins.bar_1_bin_start = 2;
-  elements[2].audioBins.bar_1_bin_end = 3;
-
-
-  elements[4].audioBins.dual_bars = false;
-  elements[4].audioBins.reverse = true;
-  elements[4].audioBins.bar_1_bin_start = 4;
-  elements[4].audioBins.bar_1_bin_end = 6;
-
-  elements[6].audioBins.dual_bars = false;
-  elements[6].audioBins.reverse = true;
-  elements[6].audioBins.bar_1_bin_start = 4;
-  elements[6].audioBins.bar_1_bin_end = 6;
-
-
-  elements[1].audioBins.dual_bars = true;
-  elements[1].audioBins.middle_out = false;
-  elements[1].audioBins.bar_1_bin_start = 7;
-  elements[1].audioBins.bar_1_bin_end = 10;
-  elements[1].audioBins.bar_2_bin_start = 11;
-  elements[1].audioBins.bar_2_bin_end = 15;
-
-  elements[3].audioBins.dual_bars = true;
-  elements[3].audioBins.middle_out = false;
-  elements[3].audioBins.bar_1_bin_start = 33;
-  elements[3].audioBins.bar_1_bin_end = 46;
-  elements[3].audioBins.bar_2_bin_start = 47;
-  elements[3].audioBins.bar_2_bin_end = 66;
-
-  elements[5].audioBins.dual_bars = true;
-  elements[5].audioBins.middle_out = false;
-  elements[5].audioBins.bar_1_bin_start = 16;
-  elements[5].audioBins.bar_1_bin_end = 22;
-  elements[5].audioBins.bar_2_bin_start = 23;
-  elements[5].audioBins.bar_2_bin_end = 32;
-
-  elements[7].audioBins.dual_bars = true;
-  elements[7].audioBins.middle_out = false;
-  elements[7].audioBins.bar_1_bin_start = 67;
-  elements[7].audioBins.bar_1_bin_end = 93;
-  elements[7].audioBins.bar_2_bin_start = 94;
-  elements[7].audioBins.bar_2_bin_end = 131;
-
 
   containers[0] = Container(8, &elements[0]);
   containers[0].setOffsets(0, 0, 0);
@@ -144,43 +97,17 @@ void setup() {
 }
 
 void loop() {
-  //Serial.print("begin: ");
-  //Serial.print(millis());
 
   if (fft.available()) {
-    /*Serial.print(millis());
-    Serial.print("; x=");
-    Serial.print(fft.read(10));
-    Serial.print("; y=");
-    Serial.print(fft.read(11));
-    Serial.print("; z=");
-    Serial.print(fft.read(12));
-    Serial.print("; sum=");
-    Serial.println(fft.read(10, 12));*/
     for (int i=0; i < 512; i++) {
       audio_bins[i] = fft.read(i);
     }
   }
 
-  /*Serial.println(leds[897].apparent_pos_x);
-  Serial.println(leds[897].apparent_pos_y);
-  Serial.println(leds[897].apparent_pos_z);
-
-
-  Serial.println(leds[921].apparent_pos_x);
-  Serial.println(leds[921].apparent_pos_y);
-  Serial.println(leds[921].apparent_pos_z);
-
-
-  Serial.println(leds[897].apparent_angle_alpha / M_PI * 180);
-  Serial.println(leds[921].apparent_angle_alpha / M_PI * 180);*/
-
-
-
-  if (Serial.available()) {
-    Serial.println("reading serial...");
+  
+  if (HWSerial.available()) {
     char rx_data[RX_BUFFER_SIZE];
-    Serial.readBytesUntil('\n', rx_data, RX_BUFFER_SIZE);
+    HWSerial.readBytesUntil('\n', rx_data, RX_BUFFER_SIZE);
     Serial.println(rx_data);
 
     JsonDocument serial_config;
@@ -190,9 +117,9 @@ void loop() {
     const char* target_config = new char(12);
 
 
-    target_type = serial_config["type"];
+    target_type = serial_config["target"];
     int target_index = serial_config["index"];
-    target_config = serial_config["config"];
+    target_config = serial_config["type"];
 
     if (strcmp(target_type, "element") == 0) {
       if (strcmp(target_config, "effect") == 0) {
@@ -207,18 +134,9 @@ void loop() {
     }
   }
 
-  //Serial.print("; after fft: ");
-  //Serial.print(millis());
-
   for (int i=0; i < NUM_CONTAINERS; i++) {
     containers[i].setStripColours();
   }
 
-  //Serial.print("; after colour setting: ");
-  //Serial.print(millis());
-
   FastLED.show();
-
-  //Serial.print("; after applying: ");
-  //Serial.println(millis());
 }

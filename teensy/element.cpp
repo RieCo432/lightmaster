@@ -110,7 +110,7 @@ void Element::closeLedApparentAngles(float factor_alpha, float factor_beta) {
 
 void Element::setEffect(JsonDocument config) {
   if (config.containsKey("enabled")) effect.enabled = config["enabled"];
-  if (config.containsKey("name")) strcpy(effect.name, config["name"]);
+  if (config.containsKey("effect_name")) strcpy(effect.name, config["effect_name"]);
 }
 
 
@@ -303,7 +303,7 @@ void Element::calculateAudioMask() {
   //bar_1_amplitude /= (audioBins.bar_1_bin_end - audioBins.bar_1_bin_start);
 
 
-  float normalised_bar_1_amplitude = normalise_bin_amplitude(bar_1_amplitude);
+  float normalised_bar_1_amplitude = max(normalise_bin_amplitude(bar_1_amplitude), 0.0);
   int bar_1_max_led_count = num_leds;
 
   float bar_2_amplitude;
@@ -317,14 +317,14 @@ void Element::calculateAudioMask() {
     }
     //bar_2_amplitude /= (audioBins.bar_2_bin_end - audioBins.bar_2_bin_start);
 
-    normalised_bar_2_amplitude = normalise_bin_amplitude(bar_2_amplitude);
+    normalised_bar_2_amplitude = max(normalise_bin_amplitude(bar_2_amplitude), 0.0);
     bar_1_max_led_count = floor(num_leds / 2);
     bar_2_max_led_count = bar_1_max_led_count;
   }
 
 
   int bar_1_led_count_target = round(bar_1_max_led_count * normalised_bar_1_amplitude);
-  bar_1_max_index = max(bar_1_led_count_target, round(bar_1_max_index / audioEffect.max_fallback_divider));
+  bar_1_max_index = max(bar_1_led_count_target, floor(bar_1_max_index / audioEffect.max_fallback_divider));
   bar_1_peak_index = max(max(bar_1_peak_index - audioEffect.peak_fallback_rate, bar_1_max_index), bar_1_led_count_target);
 
 
@@ -344,33 +344,32 @@ void Element::calculateAudioMask() {
   if (audioBins.dual_bars) {
     bar_2_led_count_target = round(bar_2_max_led_count * normalised_bar_2_amplitude);
 
-    bar_2_max_index = max(bar_2_led_count_target, round(bar_2_max_index / audioEffect.max_fallback_divider));
+    bar_2_max_index = max(bar_2_led_count_target, floor(bar_2_max_index / audioEffect.max_fallback_divider));
     bar_2_peak_index = max(max(bar_2_peak_index - audioEffect.peak_fallback_rate, bar_2_max_index), bar_2_led_count_target);
+
+    /*Serial.print("amplitude 2: ");
+    Serial.print(bar_2_amplitude);
+    Serial.print("; normal 2: ");
+    Serial.print(normalised_bar_2_amplitude);
+    Serial.print("; count_target 2: ");
+    Serial.print(bar_2_led_count_target);
+    Serial.print("; max 2: ");
+    Serial.print(bar_2_max_index);
+    Serial.print("; peak 2: ");
+    Serial.println(bar_2_peak_index);*/
   }
-
-
-  /*Serial.print("amplitude 2: ");
-  Serial.print(bar_2_amplitude);
-  Serial.print("; normal 2: ");
-  Serial.print(normalised_bar_2_amplitude);
-  Serial.print("; count_target 2: ");
-  Serial.print(bar_2_led_count_target);
-  Serial.print("; max 2: ");
-  Serial.print(bar_2_max_index);
-  Serial.print("; peak 2: ");
-  Serial.println(bar_2_peak_index);*/
 
   if (!audioBins.dual_bars) {
 
     if (!audioBins.reverse) {
-      audio_mask[bar_1_peak_index] = audioEffect.show_peaks;
-      for (int i=0; i <= bar_1_max_index; i++) {
+      if (bar_1_peak_index != 0) audio_mask[bar_1_peak_index] = audioEffect.show_peaks;
+      for (int i=0; i < bar_1_max_index; i++) {
         audio_mask[i] = true;
       }
 
     } else if (audioBins.reverse) {
-      audio_mask[num_leds - 1 - bar_1_peak_index] = audioEffect.show_peaks;
-      for (int i=0; i <= bar_1_max_index; i++) {
+      if (bar_1_peak_index != 0) audio_mask[num_leds - 1 - bar_1_peak_index] = audioEffect.show_peaks;
+      for (int i=0; i < bar_1_max_index; i++) {
         audio_mask[num_leds - 1 - i] = true;
       }
     }  
@@ -379,13 +378,13 @@ void Element::calculateAudioMask() {
 
     if (!audioBins.middle_out) {
 
-      audio_mask[bar_1_peak_index] = audioEffect.show_peaks;
-      for (int i=0; i <= bar_1_max_index; i++) {
+      if (bar_1_peak_index != 0) audio_mask[bar_1_peak_index] = audioEffect.show_peaks;
+      for (int i=0; i < bar_1_max_index; i++) {
         audio_mask[i] = true;
       }
       
-      audio_mask[num_leds - 1 - bar_2_peak_index] = audioEffect.show_peaks;
-      for (int i=0; i <= bar_2_max_index; i++) {
+      if (bar_2_peak_index != 0) audio_mask[num_leds - 1 - bar_2_peak_index] = audioEffect.show_peaks;
+      for (int i=0; i < bar_2_max_index; i++) {
         audio_mask[num_leds - 1 - i] = true;
       }
 
@@ -394,13 +393,13 @@ void Element::calculateAudioMask() {
       int bar_1_start = floor(num_leds / 2 - 0.5);
       int bar_2_start = ceil(num_leds / 2 - 0.5);
 
-      audio_mask[bar_1_start - bar_1_peak_index] = audioEffect.show_peaks;
-      for (int i=0; i <= bar_1_max_index; i++) {
+      if (bar_1_peak_index != 0) audio_mask[bar_1_start - bar_1_peak_index] = audioEffect.show_peaks;
+      for (int i=0; i < bar_1_max_index; i++) {
         audio_mask[bar_1_start - i] = true;
       }
 
-      audio_mask[bar_2_start + bar_2_peak_index] = audioEffect.show_peaks;
-      for (int i=0; i <= bar_2_max_index; i++) {
+      if (bar_2_peak_index != 0) audio_mask[bar_2_start + bar_2_peak_index] = audioEffect.show_peaks;
+      for (int i=0; i < bar_2_max_index; i++) {
         audio_mask[bar_2_start + i] = true;
       }
     }
