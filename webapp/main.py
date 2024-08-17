@@ -90,6 +90,8 @@ def index():
 
     if save_preset_form.validate_on_submit():
         save_preset(save_preset_form)
+        save_preset_form.preset_name.data = None
+        save_preset_form.preset_description.data = None
 
     return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted, save_preset_form=save_preset_form)
 
@@ -162,6 +164,32 @@ def bins():
         read_audio_bins_to_form(audio_bins_form, int(request.args.get("element")))
 
     return render_template("bins.html", audio_bins_form=audio_bins_form)
+
+
+@app.route("/presets", methods=["GET"])
+def presets():
+    presets_dict = load_presets()
+    all_presets = [{"name": key, "description": presets_dict[key], "apply-link": url_for("apply_preset") + "?name=" + key, "delete-link": url_for("delete_preset") + "?name=" + key} for key in presets_dict]
+
+    return render_template("presets.html", presets=all_presets)
+
+
+@app.route("/apply-preset", methods=["GET"])
+def apply_preset():
+    preset_name = request.args.get("name")
+    load_preset(preset_name)
+    save_config()
+    send_config()
+    flash("Preset applied")
+    return redirect(url_for("index"))
+
+
+@app.route("/delete-preset", methods=["GET"])
+def delete_preset():
+    preset_name = request.args.get("name")
+    remove_preset(preset_name)
+    flash("Preset deleted")
+    return redirect(url_for("index"))
 
 
 @app.route("/sync-config")

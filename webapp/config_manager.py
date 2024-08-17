@@ -345,3 +345,20 @@ def save_preset(save_preset_form: forms.SavePresetForm):
 
         with open(presets_file_path, "w") as fout:
             json.dump(presets, fout)
+
+
+def load_preset(preset_name: str):
+    global effect_config
+    if preset_name in presets:
+        with open(os.path.join(preset_folder_path, preset_name + ".json"), "r") as fin:
+            effect_config = json.load(fin)
+
+
+def remove_preset(preset_name: str):
+    if preset_name in presets:
+        presets.pop(preset_name)
+
+        os.remove(os.path.join(preset_folder_path, preset_name + ".json"))
+
+        with open(presets_file_path, "w") as fout:
+            json.dump(presets, fout)
