@@ -300,10 +300,10 @@ void Element::calculateAudioMask() {
   for (int i=audioBins.bar_1_bin_start; i <= audioBins.bar_1_bin_end; i++) {
     bar_1_amplitude += audio_bins[i];
   }
-  //bar_1_amplitude /= (audioBins.bar_1_bin_end - audioBins.bar_1_bin_start);
+  bar_1_amplitude = normalise_bin_amplitude(bar_1_amplitude, audioBins.bar_1_bin_end - audioBins.bar_1_bin_start);
 
 
-  float normalised_bar_1_amplitude = max(normalise_bin_amplitude(bar_1_amplitude), 0.0);
+  float normalised_bar_1_amplitude = max(sigmoid_bin_amplitude(bar_1_amplitude), 0.0);
   int bar_1_max_led_count = num_leds;
 
   float bar_2_amplitude;
@@ -315,9 +315,9 @@ void Element::calculateAudioMask() {
     for (int i=audioBins.bar_2_bin_start; i <= audioBins.bar_2_bin_end; i++) {
       bar_2_amplitude += audio_bins[i];
     }
-    //bar_2_amplitude /= (audioBins.bar_2_bin_end - audioBins.bar_2_bin_start);
+    bar_2_amplitude = normalise_bin_amplitude(bar_2_amplitude, audioBins.bar_2_bin_end - audioBins.bar_2_bin_start);
 
-    normalised_bar_2_amplitude = max(normalise_bin_amplitude(bar_2_amplitude), 0.0);
+    normalised_bar_2_amplitude = max(sigmoid_bin_amplitude(bar_2_amplitude), 0.0);
     bar_1_max_led_count = floor(num_leds / 2);
     bar_2_max_led_count = bar_1_max_led_count;
   }

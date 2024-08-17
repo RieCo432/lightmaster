@@ -77,10 +77,10 @@ class Element {
       .middle_out = false,
 
       .bar_1_bin_start = 0,
-      .bar_1_bin_end = 10,
+      .bar_1_bin_end = 255,
 
-      .bar_2_bin_start = 0,
-      .bar_2_bin_end = 10,
+      .bar_2_bin_start = 256,
+      .bar_2_bin_end = 511,
     };
 
     Element();

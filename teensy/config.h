@@ -53,7 +53,8 @@ typedef struct {
   int bar_2_bin_end;
 } AudioBins;
 
-float normalise_bin_amplitude(float bin_amplitude);
+float sigmoid_bin_amplitude(float bin_amplitude);
+float normalise_bin_amplitude(float bin_amplitude, int bin_count);
 
 
 #endif
