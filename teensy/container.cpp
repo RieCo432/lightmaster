@@ -69,12 +69,12 @@ void Container::setElementApparentAngles() {
   float range_alpha = alpha_max - alpha_min;
   float range_beta = beta_max - beta_min;
 
-  float factor_alpha = 2 * M_PI / range_alpha;
+  float factor_alpha = 1;  // 2 * M_PI / range_alpha;
   float factor_beta = 2 * M_PI / range_beta;
 
-  /*for (int i=0; i < num_elements; i++) {
+  for (int i=0; i < num_elements; i++) {
     start_element[i].closeLedApparentAngles(factor_alpha, factor_beta);
-  };*/
+  };
 }
 
 void Container::setStripColours() {
