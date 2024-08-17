@@ -29,8 +29,11 @@ class Element {
     int bar_1_max_index = 0;
     int bar_2_max_index = 0;
 
-    int bar_1_peak_index = 5;
-    int bar_2_peak_index = 5;
+    float bar_1_peak_proto_index = 5.0;
+    float bar_2_peak_proto_index = 5.0;
+
+    int bar_1_peak_index;
+    int bar_2_peak_index;
 
     bool *audio_mask;
 
