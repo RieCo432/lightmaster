@@ -207,7 +207,7 @@ void Element::applySpectrumBarsBackground() {
 
   if (!audioBins.dual_bars) {
     if (audioEffect.absolute_range) {
-      max_num_leds = round(audioEffect.range_to_max);
+      max_num_leds = min(round(audioEffect.range_to_max), num_leds);
     } else {
       max_num_leds = round(num_leds * audioEffect.range_to_max);
     }
@@ -234,7 +234,7 @@ void Element::applySpectrumBarsBackground() {
   } else if (audioBins.dual_bars) {
 
     if (audioEffect.absolute_range) {
-      max_num_leds = round(audioEffect.range_to_max);
+      max_num_leds = min(round(audioEffect.range_to_max), round(num_leds / 2));
     } else {
       max_num_leds = ceil(num_leds / 2 * audioEffect.range_to_max);
     }
