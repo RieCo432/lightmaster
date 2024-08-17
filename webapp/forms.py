@@ -123,3 +123,13 @@ class RainbowForm(FlaskForm):
     class Meta:
         csrf = False
 
+
+class SavePresetForm(FlaskForm):
+    preset_name = StringField("Preset Name")
+    preset_description = StringField("Preset Description")
+
+    submit = SubmitField("Save")
+
+    class Meta:
+        csrf = False
+

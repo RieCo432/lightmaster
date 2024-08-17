@@ -3,6 +3,8 @@ from forms import *
 
 
 effect_config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "effect_config.json")
+presets_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "presets.json")
+preset_folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "presets")
 
 
 def read_effect_config():
@@ -12,8 +14,13 @@ def read_effect_config():
     return config
 
 
-effect_config = read_effect_config()
+def load_presets():
+    with open(presets_file_path, "r") as fin:
+        return json.load(fin)
 
+
+effect_config = read_effect_config()
+presets = load_presets()
 
 def save_config():
     with open(effect_config_file_path, "w") as fout:
@@ -327,3 +334,14 @@ def get_spectrum_bars_summary(element_index):
 
 def get_audio_bins_summary(element_index):
     return effect_config["elements"][element_index]["audio_bins"]
+
+
+def save_preset(save_preset_form: forms.SavePresetForm):
+    if save_preset_form.preset_name.data not in presets:
+        presets[save_preset_form.preset_name.data] = save_preset_form.preset_description.data
+
+        with open(os.path.join(preset_folder_path, save_preset_form.preset_name.data + ".json"), "w") as fout:
+            json.dump(effect_config, fout)
+
+        with open(presets_file_path, "w") as fout:
+            json.dump(presets, fout)

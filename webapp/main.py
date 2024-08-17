@@ -86,7 +86,12 @@ def index():
         }
         audio_bins_groups_formatted.append(formatted_audio_bins_group)
 
-    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted)
+    save_preset_form = SavePresetForm()
+
+    if save_preset_form.validate_on_submit():
+        save_preset(save_preset_form)
+
+    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted, save_preset_form=save_preset_form)
 
 
 @app.route("/effect", methods=["GET", "POST"])
