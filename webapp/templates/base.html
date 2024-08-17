@@ -2,8 +2,10 @@
 <html>
      <head>
          <title>Lightmaster</title>
+         {{ bootstrap.load_css() }}
      </head>
      <body>
          {% block content %}{% endblock %}
+        {{ bootstrap.load_js() }}
      </body>
 </html>

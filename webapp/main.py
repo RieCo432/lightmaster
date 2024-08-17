@@ -10,6 +10,7 @@ from serial_interface import send_config, send_entire_config
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
+app.config['BOOTSTRAP_BOOTSWATCH_THEME'] = "darkly"
 
 send_entire_config()
 
