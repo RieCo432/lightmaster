@@ -10,9 +10,9 @@ connected = False
 attempts_left = 60
 while not connected and attempts_left > 1:
     try:
-        sleep(3)
+        sleep(5)
         ser = serial.Serial('/dev/serial0', 9600, timeout=2)
-        #ser.flush()
+        ser.flush()
         connected = True
         print("connected!")
     except serial.serialutil.SerialException:
