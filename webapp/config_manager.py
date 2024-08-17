@@ -124,16 +124,16 @@ def apply_audio(audio_form: forms.AudioForm):
 
 def apply_spectrum_bars(spectrum_bars_form: forms.SpectrumBarsForm):
     for element_index in get_all_target_elements(spectrum_bars_form.targets):
-        effect_config["elements"][element_index]["audio"]["hue_offset_low"] = spectrum_bars_form.hue_offset_low.data
-        effect_config["elements"][element_index]["audio"]["hue_offset_high"] = spectrum_bars_form.hue_offset_high.data
-        effect_config["elements"][element_index]["audio"]["hue_offset_peak"] = spectrum_bars_form.hue_offset_peak.data
-        effect_config["elements"][element_index]["audio"]["hue_start"] = spectrum_bars_form.hue_start.data
-        effect_config["elements"][element_index]["audio"]["hue_end"] = spectrum_bars_form.hue_end.data
-        effect_config["elements"][element_index]["audio"]["period"] = spectrum_bars_form.period.data
-        effect_config["elements"][element_index]["audio"]["value"] = spectrum_bars_form.value.data
-        effect_config["elements"][element_index]["audio"]["saturation"] = spectrum_bars_form.saturation.data
-        effect_config["elements"][element_index]["audio"]["absolute_range"] = spectrum_bars_form.absolute_range.data
-        effect_config["elements"][element_index]["audio"]["range_to_max"] = spectrum_bars_form.range_to_max.data
+        effect_config["elements"][element_index]["spectrum_bars"]["hue_offset_low"] = spectrum_bars_form.hue_offset_low.data
+        effect_config["elements"][element_index]["spectrum_bars"]["hue_offset_high"] = spectrum_bars_form.hue_offset_high.data
+        effect_config["elements"][element_index]["spectrum_bars"]["hue_offset_peak"] = spectrum_bars_form.hue_offset_peak.data
+        effect_config["elements"][element_index]["spectrum_bars"]["hue_start"] = spectrum_bars_form.hue_start.data
+        effect_config["elements"][element_index]["spectrum_bars"]["hue_end"] = spectrum_bars_form.hue_end.data
+        effect_config["elements"][element_index]["spectrum_bars"]["period"] = spectrum_bars_form.period.data
+        effect_config["elements"][element_index]["spectrum_bars"]["value"] = spectrum_bars_form.value.data
+        effect_config["elements"][element_index]["spectrum_bars"]["saturation"] = spectrum_bars_form.saturation.data
+        effect_config["elements"][element_index]["spectrum_bars"]["absolute_range"] = spectrum_bars_form.absolute_range.data
+        effect_config["elements"][element_index]["spectrum_bars"]["range_to_max"] = spectrum_bars_form.range_to_max.data
 
     save_config()
 
