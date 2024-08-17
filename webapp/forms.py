@@ -60,7 +60,7 @@ class AudioForm(FlaskForm):
     base_effect = SelectField('Base Effect', choices=[("rainbow", "Rainbow"), ("spectrumBars", "Spectrum Bars")])
     show_peaks = BooleanField("Show Peaks")
     max_fallback_divider = FloatField("Maximum Fallback Divider")
-    peak_fallback_rate = IntegerField("Peak Fallback Rate")
+    peak_fallback_rate = FloatField("Peak Fallback Rate")
 
     targets = FormField(TargetForm)
 

@@ -23,7 +23,7 @@ typedef struct {
   bool show_peaks;
   
   float max_fallback_divider;
-  int peak_fallback_rate;
+  float peak_fallback_rate;
 
 } AudioEffect;
 

@@ -55,7 +55,7 @@ class Element {
       .show_peaks = true,
 
       .max_fallback_divider = 1.3,
-      .peak_fallback_rate = 1
+      .peak_fallback_rate = 1.0
     };
 
     SpectrumBars spectrumBars = {

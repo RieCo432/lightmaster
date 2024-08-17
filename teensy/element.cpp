@@ -332,7 +332,7 @@ void Element::calculateAudioMask() {
 
   int bar_1_led_count_target = round(bar_1_max_led_count * normalised_bar_1_amplitude);
   bar_1_max_index = max(bar_1_led_count_target, floor(bar_1_max_index / audioEffect.max_fallback_divider));
-  bar_1_peak_index = max(max(bar_1_peak_index - audioEffect.peak_fallback_rate, bar_1_max_index), bar_1_led_count_target);
+  bar_1_peak_index = round(max(max(bar_1_peak_index - audioEffect.peak_fallback_rate, bar_1_max_index), bar_1_led_count_target));
 
 
   /*Serial.print("amplitude 1: ");
@@ -352,7 +352,7 @@ void Element::calculateAudioMask() {
     bar_2_led_count_target = round(bar_2_max_led_count * normalised_bar_2_amplitude);
 
     bar_2_max_index = max(bar_2_led_count_target, floor(bar_2_max_index / audioEffect.max_fallback_divider));
-    bar_2_peak_index = max(max(bar_2_peak_index - audioEffect.peak_fallback_rate, bar_2_max_index), bar_2_led_count_target);
+    bar_2_peak_index = round(max(max(bar_2_peak_index - audioEffect.peak_fallback_rate, bar_2_max_index), bar_2_led_count_target));
 
     /*Serial.print("amplitude 2: ");
     Serial.print(bar_2_amplitude);
