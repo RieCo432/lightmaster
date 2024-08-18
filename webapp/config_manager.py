@@ -378,7 +378,7 @@ def get_container_spatial_summary(container_index):
 
 
 def save_effect_preset(save_effect_preset_form: forms.SavePresetForm):
-    if save_effect_preset_form.preset_name.data not in presets["effect"]:
+    if save_effect_preset_form.preset_name.data not in presets["effects"]:
         presets["effects"][save_effect_preset_form.preset_name.data] = save_effect_preset_form.preset_description.data
 
         with open(os.path.join(preset_folder_path, save_effect_preset_form.preset_name.data + "-effect.json"), "w") as fout:
@@ -403,6 +403,7 @@ def remove_effect_preset(effect_preset_name: str):
 
         with open(presets_file_path, "w") as fout:
             json.dump(presets, fout)
+
 
 def save_spatial_preset(save_spatial_preset_form: forms.SavePresetForm):
     if save_spatial_preset_form.preset_name.data not in presets["spatial"]:
