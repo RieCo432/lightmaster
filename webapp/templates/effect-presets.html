@@ -4,8 +4,13 @@
 {% block content %}
 
     <p>
-        <h2>Presets</h2>
-        {% for preset in presets %}
+        <h2>Save Effect Preset</h2>
+        {{ render_form(save_effect_preset_form) }}
+    </p>
+
+    <p>
+        <h2>Effect Presets</h2>
+        {% for preset in effect_presets %}
             <a href="{{preset['apply-link']}}">{{preset["name"]}}</a>&nbsp;{{ preset["description"] }}&nbsp;<a href="{{preset['delete-link']}}">Delete</a><br>
 
         {% endfor %}

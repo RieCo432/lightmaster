@@ -87,14 +87,7 @@ def index():
         }
         audio_bins_groups_formatted.append(formatted_audio_bins_group)
 
-    save_preset_form = SavePresetForm()
-
-    if save_preset_form.validate_on_submit():
-        save_preset(save_preset_form)
-        save_preset_form.preset_name.data = None
-        save_preset_form.preset_description.data = None
-
-    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted, save_preset_form=save_preset_form)
+    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted)
 
 
 @app.route("/effect", methods=["GET", "POST"])
@@ -167,30 +160,39 @@ def bins():
     return render_template("bins.html", audio_bins_form=audio_bins_form)
 
 
-@app.route("/presets", methods=["GET"])
-def presets():
-    presets_dict = load_presets()
-    all_presets = [{"name": key, "description": presets_dict[key], "apply-link": url_for("apply_preset") + "?name=" + key, "delete-link": url_for("delete_preset") + "?name=" + key} for key in presets_dict]
+@app.route("/effect-presets", methods=["GET", "POST"])
+def effect_presets():
+    save_effect_preset_form = SavePresetForm()
 
-    return render_template("presets.html", presets=all_presets)
+    if save_effect_preset_form.validate_on_submit():
+        save_effect_preset(save_effect_preset_form)
+        save_effect_preset_form.preset_name.data = None
+        save_effect_preset_form.preset_description.data = None
+
+        return redirect(url_for("effect_presets"))
+
+    effect_presets_dict = load_presets()["effects"]
+    all_effect_presets = [{"name": key, "description": effect_presets_dict[key], "apply-link": url_for("apply_effect_preset") + "?name=" + key, "delete-link": url_for("delete_effect_preset") + "?name=" + key} for key in effect_presets_dict]
+
+    return render_template("effect-presets.html", effect_presets=all_effect_presets, save_effect_preset_form=save_effect_preset_form)
 
 
-@app.route("/apply-preset", methods=["GET"])
-def apply_preset():
+@app.route("/apply-effect-preset", methods=["GET"])
+def apply_effect_preset():
     preset_name = request.args.get("name")
-    load_preset(preset_name)
+    load_effect_preset(preset_name)
     save_config()
     send_config()
-    flash("Preset applied")
+    flash("Effect Preset applied")
     return redirect(url_for("index"))
 
 
-@app.route("/delete-preset", methods=["GET"])
-def delete_preset():
+@app.route("/delete-effect-preset", methods=["GET"])
+def delete_effect_preset():
     preset_name = request.args.get("name")
-    remove_preset(preset_name)
-    flash("Preset deleted")
-    return redirect(url_for("index"))
+    remove_effect_preset(preset_name)
+    flash("Effect Preset deleted")
+    return redirect(url_for("effect_presets"))
 
 
 @app.route("/sync-config")

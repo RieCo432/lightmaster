@@ -336,29 +336,29 @@ def get_audio_bins_summary(element_index):
     return effect_config["elements"][element_index]["audio_bins"]
 
 
-def save_preset(save_preset_form: forms.SavePresetForm):
-    if save_preset_form.preset_name.data not in presets:
-        presets[save_preset_form.preset_name.data] = save_preset_form.preset_description.data
+def save_effect_preset(save_effect_preset_form: forms.SavePresetForm):
+    if save_effect_preset_form.preset_name.data not in presets:
+        presets["effects"][save_effect_preset_form.preset_name.data] = save_effect_preset_form.preset_description.data
 
-        with open(os.path.join(preset_folder_path, save_preset_form.preset_name.data + ".json"), "w") as fout:
+        with open(os.path.join(preset_folder_path, save_effect_preset_form.preset_name.data + ".json"), "w") as fout:
             json.dump(effect_config, fout)
 
         with open(presets_file_path, "w") as fout:
             json.dump(presets, fout)
 
 
-def load_preset(preset_name: str):
+def load_effect_preset(effect_preset_name: str):
     global effect_config
-    if preset_name in presets:
-        with open(os.path.join(preset_folder_path, preset_name + ".json"), "r") as fin:
+    if effect_preset_name in presets["effects"]:
+        with open(os.path.join(preset_folder_path, effect_preset_name + ".json"), "r") as fin:
             effect_config = json.load(fin)
 
 
-def remove_preset(preset_name: str):
-    if preset_name in presets:
-        presets.pop(preset_name)
+def remove_effect_preset(effect_preset_name: str):
+    if effect_preset_name in presets["effects"]:
+        presets["effects"].pop(effect_preset_name)
 
-        os.remove(os.path.join(preset_folder_path, preset_name + ".json"))
+        os.remove(os.path.join(preset_folder_path, effect_preset_name + ".json"))
 
         with open(presets_file_path, "w") as fout:
             json.dump(presets, fout)
