@@ -80,14 +80,8 @@ void setup() {
 
 
   containers[0] = Container(8, &elements[0]);
-  containers[0].setOffsets(0, 0, 0);
-  containers[0].setViewer(2.375, 1.675, 1.6);
-  containers[0].setElementApparentAngles();
-
   containers[1] = Container(4, &elements[8]);
-  containers[1].setOffsets(0.1, 1.43, 0.73);
-  containers[1].setViewer(2.375, 1.675, 1.6);
-  containers[1].setElementApparentAngles();
+
 
   for (int i=0; i < NUM_LEDS; i++) {
     strip[i] = CRGB::Black;
@@ -132,6 +126,14 @@ void loop() {
         elements[target_index].setSpectrumBars(serial_config["data"]);
       } else if (strcmp(target_config, "audio_bins") == 0) {
         elements[target_index].setAudioBins(serial_config["data"]);
+      }
+    } else if (strcmp(target_type, "container") == 0) {
+      if (strcmp(target_config, "offsets") == 0) {
+        containers[target_index].setOffsets(serial_config["data"]["x"], serial_config["data"]["y"], serial_config["data"]["z"]);
+        containers[target_index].setElementApparentAngles();
+      } else if (strcmp(target_config, "viewpoint") == 0) {
+        containers[target_index].setViewer(serial_config["data"]["x"], serial_config["data"]["y"], serial_config["data"]["z"]);
+        containers[target_index].setElementApparentAngles();
       }
     }
   }

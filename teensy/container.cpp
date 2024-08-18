@@ -12,6 +12,8 @@ Container::Container() {
 Container::Container(int number_of_elements, Element *first_element) {
   num_elements = number_of_elements;
   start_element = first_element;
+  setElementOffsets();
+  setElementViewer();
 };
 
 
@@ -19,12 +21,14 @@ void Container::setElementOffsets() {
   for (int i=0; i < num_elements; i++) {
     start_element[i].setLedOffsets(offset_x, offset_y, offset_z);
   }
+  setElementApparentAngles();
 }
 
 void Container::setElementViewer() {
   for (int i=0; i < num_elements; i++) {
     start_element[i].setLedViewer(viewer_x, viewer_y, viewer_z);
   }
+  setElementApparentAngles();
 }
 
 void Container::setElementApparentAngles() {

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+
+    <p>
+        <h2>Save Spatial Preset</h2>
+        {{ render_form(save_spatial_preset_form) }}
+    </p>
+
+    <p>
+        <h2>Spatial Presets</h2>
+        {% for preset in spatial_presets %}
+            <a href="{{preset['apply-link']}}">{{preset["name"]}}</a>&nbsp;{{ preset["description"] }}&nbsp;<a href="{{preset['delete-link']}}">Delete</a><br>
+
+        {% endfor %}
+    </p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+{% endblock %}

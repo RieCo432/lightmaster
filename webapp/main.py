@@ -87,7 +87,17 @@ def index():
         }
         audio_bins_groups_formatted.append(formatted_audio_bins_group)
 
-    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted)
+    container_spatial_configs = read_spatial_config()
+    container_spatial_configs_formatted = []
+    for i, container_spatial_config in enumerate(container_spatial_configs["containers"]):
+        formatted_container_spatial_config = {
+            "link": url_for("spatial", container=i),
+            "text": setup_config["container_names"][i],
+            "summary": get_container_spatial_summary(i)
+        }
+        container_spatial_configs_formatted.append(formatted_container_spatial_config)
+
+    return render_template("index.html", effect_groups_formatted=effect_groups_formatted, rainbow_groups_formatted=rainbow_groups_formatted, audio_groups_formatted=audio_groups_formatted, audio_bins_groups_formatted=audio_bins_groups_formatted, spectrum_bars_groups_formatted=spectrum_bars_groups_formatted, container_spatial_configs=container_spatial_configs_formatted)
 
 
 @app.route("/effect", methods=["GET", "POST"])
@@ -160,6 +170,20 @@ def bins():
     return render_template("bins.html", audio_bins_form=audio_bins_form)
 
 
+@app.route("/spatial", methods=["GET", "POST"])
+def spatial():
+    spatial_form = SpatialForm()
+    if spatial_form.validate_on_submit():
+        apply_spatial(spatial_form)
+        send_config()
+        flash("Spatial applied")
+        return redirect(url_for("index"))
+    else:
+        read_spatial_to_form(spatial_form, int(request.args.get("container")))
+
+    return render_template("spatial.html", spatial_form=spatial_form)
+
+
 @app.route("/effect-presets", methods=["GET", "POST"])
 def effect_presets():
     save_effect_preset_form = SavePresetForm()
@@ -193,6 +217,42 @@ def delete_effect_preset():
     remove_effect_preset(preset_name)
     flash("Effect Preset deleted")
     return redirect(url_for("effect_presets"))
+
+
+
+@app.route("/spatial-presets", methods=["GET", "POST"])
+def spatial_presets():
+    save_spatial_preset_form = SavePresetForm()
+
+    if save_spatial_preset_form.validate_on_submit():
+        save_spatial_preset(save_spatial_preset_form)
+        save_spatial_preset_form.preset_name.data = None
+        save_spatial_preset_form.preset_description.data = None
+
+        return redirect(url_for("spatial_presets"))
+
+    spatial_presets_dict = load_presets()["spatial"]
+    all_spatial_presets = [{"name": key, "description": spatial_presets_dict[key], "apply-link": url_for("apply_spatial_preset") + "?name=" + key, "delete-link": url_for("delete_spatial_preset") + "?name=" + key} for key in spatial_presets_dict]
+
+    return render_template("spatial-presets.html", spatial_presets=all_spatial_presets, save_spatial_preset_form=save_spatial_preset_form)
+
+
+@app.route("/apply-spatial-preset", methods=["GET"])
+def apply_spatial_preset():
+    preset_name = request.args.get("name")
+    load_spatial_preset(preset_name)
+    save_config()
+    send_config()
+    flash("Spatial Preset applied")
+    return redirect(url_for("index"))
+
+
+@app.route("/delete-spatial-preset", methods=["GET"])
+def delete_spatial_preset():
+    preset_name = request.args.get("name")
+    remove_spatial_preset(preset_name)
+    flash("Spatial Preset deleted")
+    return redirect(url_for("spatial_presets"))
 
 
 @app.route("/sync-config")

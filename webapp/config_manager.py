@@ -3,6 +3,7 @@ from forms import *
 
 
 effect_config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "effect_config.json")
+spatial_config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "spatial_config.json")
 presets_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "presets.json")
 preset_folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "presets")
 
@@ -14,17 +15,28 @@ def read_effect_config():
     return config
 
 
+def read_spatial_config():
+    with open(spatial_config_file_path, "r") as fin:
+        config = json.load(fin)
+
+    return config
+
+
 def load_presets():
     with open(presets_file_path, "r") as fin:
         return json.load(fin)
 
 
 effect_config = read_effect_config()
+spatial_config = read_spatial_config()
 presets = load_presets()
+
 
 def save_config():
     with open(effect_config_file_path, "w") as fout:
         json.dump(effect_config, fout)
+    with open(spatial_config_file_path, "w") as fout:
+        json.dump(spatial_config, fout)
 
 
 def containerise_elements(elements):
@@ -244,6 +256,31 @@ def read_rainbow_to_form(rainbow_form, element_index):
         rainbow_form.targets.container_indexes.data = containers
 
 
+def apply_spatial(spatial_form: forms.SpatialForm):
+    for container_index in spatial_form.container_targets.container_indexes.data:
+        spatial_config["containers"][container_index]["offsets"]["x"] = spatial_form.offset_x.data
+        spatial_config["containers"][container_index]["offsets"]["y"] = spatial_form.offset_y.data
+        spatial_config["containers"][container_index]["offsets"]["z"] = spatial_form.offset_z.data
+
+        spatial_config["containers"][container_index]["viewpoint"]["x"] = spatial_form.viewer_x.data
+        spatial_config["containers"][container_index]["viewpoint"]["y"] = spatial_form.viewer_y.data
+        spatial_config["containers"][container_index]["viewpoint"]["z"] = spatial_form.viewer_z.data
+
+    save_config()
+
+
+def read_spatial_to_form(spatial_form, container_index):
+    spatial_form.offset_x.data = spatial_config["containers"][container_index]["offsets"]["x"]
+    spatial_form.offset_y.data = spatial_config["containers"][container_index]["offsets"]["y"]
+    spatial_form.offset_z.data = spatial_config["containers"][container_index]["offsets"]["z"]
+
+    spatial_form.viewer_x.data = spatial_config["containers"][container_index]["viewpoint"]["x"]
+    spatial_form.viewer_y.data = spatial_config["containers"][container_index]["viewpoint"]["y"]
+    spatial_form.viewer_z.data = spatial_config["containers"][container_index]["viewpoint"]["z"]
+
+    spatial_form.container_targets.container_indexes.data = [container_index]
+
+
 def get_effect_groups():
     effect_parameters = []
     effect_groups = []
@@ -336,11 +373,15 @@ def get_audio_bins_summary(element_index):
     return effect_config["elements"][element_index]["audio_bins"]
 
 
+def get_container_spatial_summary(container_index):
+    return spatial_config["containers"][container_index]
+
+
 def save_effect_preset(save_effect_preset_form: forms.SavePresetForm):
-    if save_effect_preset_form.preset_name.data not in presets:
+    if save_effect_preset_form.preset_name.data not in presets["effect"]:
         presets["effects"][save_effect_preset_form.preset_name.data] = save_effect_preset_form.preset_description.data
 
-        with open(os.path.join(preset_folder_path, save_effect_preset_form.preset_name.data + ".json"), "w") as fout:
+        with open(os.path.join(preset_folder_path, save_effect_preset_form.preset_name.data + "-effect.json"), "w") as fout:
             json.dump(effect_config, fout)
 
         with open(presets_file_path, "w") as fout:
@@ -350,7 +391,7 @@ def save_effect_preset(save_effect_preset_form: forms.SavePresetForm):
 def load_effect_preset(effect_preset_name: str):
     global effect_config
     if effect_preset_name in presets["effects"]:
-        with open(os.path.join(preset_folder_path, effect_preset_name + ".json"), "r") as fin:
+        with open(os.path.join(preset_folder_path, effect_preset_name + "-effect.json"), "r") as fin:
             effect_config = json.load(fin)
 
 
@@ -358,7 +399,34 @@ def remove_effect_preset(effect_preset_name: str):
     if effect_preset_name in presets["effects"]:
         presets["effects"].pop(effect_preset_name)
 
-        os.remove(os.path.join(preset_folder_path, effect_preset_name + ".json"))
+        os.remove(os.path.join(preset_folder_path, effect_preset_name + "-effect.json"))
+
+        with open(presets_file_path, "w") as fout:
+            json.dump(presets, fout)
+
+def save_spatial_preset(save_spatial_preset_form: forms.SavePresetForm):
+    if save_spatial_preset_form.preset_name.data not in presets["spatial"]:
+        presets["spatial"][save_spatial_preset_form.preset_name.data] = save_spatial_preset_form.preset_description.data
+
+        with open(os.path.join(preset_folder_path, save_spatial_preset_form.preset_name.data + "-spatial.json"), "w") as fout:
+            json.dump(spatial_config, fout)
+
+        with open(presets_file_path, "w") as fout:
+            json.dump(presets, fout)
+
+
+def load_spatial_preset(spatial_preset_name: str):
+    global spatial_config
+    if spatial_preset_name in presets["spatial"]:
+        with open(os.path.join(preset_folder_path, spatial_preset_name + "-spatial.json"), "r") as fin:
+            spatial_config = json.load(fin)
+
+
+def remove_spatial_preset(spatial_preset_name: str):
+    if spatial_preset_name in presets["spatial"]:
+        presets["spatial"].pop(spatial_preset_name)
+
+        os.remove(os.path.join(preset_folder_path, spatial_preset_name + "-spatial.json"))
 
         with open(presets_file_path, "w") as fout:
             json.dump(presets, fout)

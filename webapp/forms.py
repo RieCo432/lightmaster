@@ -34,6 +34,18 @@ class TargetForm(FlaskForm):
         csrf = False
 
 
+class TargetContainerForm(FlaskForm):
+    container_indexes = SelectMultipleField("Container Selection",
+                                            choices=[(index, name)
+                                                     for index, name in zip(
+                                                    setup_config["containers"],
+                                                    setup_config["container_names"]
+                                                )], coerce=int)
+
+    class Meta:
+        csrf = False
+
+
 def get_all_target_elements(target_form):
     elements = []
     elements += target_form.element_indexes.data if target_form.apply_to_elements.data else []
@@ -129,6 +141,23 @@ class SavePresetForm(FlaskForm):
     preset_description = StringField("Preset Description")
 
     submit = SubmitField("Save")
+
+    class Meta:
+        csrf = False
+
+
+class SpatialForm(FlaskForm):
+    offset_x = FloatField("Offset X")
+    offset_y = FloatField("Offset Y")
+    offset_z = FloatField("Offset Z")
+
+    viewer_x = FloatField("Viewer X")
+    viewer_y = FloatField("Viewer Y")
+    viewer_z = FloatField("Viewer Z")
+
+    container_targets = FormField(TargetContainerForm)
+
+    submit = SubmitField("Apply")
 
     class Meta:
         csrf = False
