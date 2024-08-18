@@ -1,1 +1,1 @@
-{"effects": {}, "spatial": {}}
+{"effects": {}, "spatial": {"computer-unison": "room and table in unison with viewpoint from computer", "couch-unison": "room and table in unison with viewpoint from couch", "centre-unison": "room and table in unison with viewpoint from room centre", "individual-centres": "room and table each use their own centre"}}
