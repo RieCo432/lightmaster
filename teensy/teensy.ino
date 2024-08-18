@@ -130,10 +130,8 @@ void loop() {
     } else if (strcmp(target_type, "container") == 0) {
       if (strcmp(target_config, "offsets") == 0) {
         containers[target_index].setOffsets(serial_config["data"]["x"], serial_config["data"]["y"], serial_config["data"]["z"]);
-        containers[target_index].setElementApparentAngles();
       } else if (strcmp(target_config, "viewpoint") == 0) {
         containers[target_index].setViewer(serial_config["data"]["x"], serial_config["data"]["y"], serial_config["data"]["z"]);
-        containers[target_index].setElementApparentAngles();
       }
     }
   }
