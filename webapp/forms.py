@@ -58,7 +58,7 @@ def get_all_target_elements(target_form):
 
 class EffectForm(FlaskForm):
     enabled = BooleanField("Enabled")
-    effect_name = SelectField('Effect Name', choices=[("rainbow", "Rainbow"), ("audio", "Audio"), ("spectrum_bars", "SpectrumBars")])
+    effect_name = SelectField('Effect Name', choices=[("rainbow", "Rainbow"), ("audio", "Audio"), ("spectrum_bars", "SpectrumBars"), ("dual_zone", "DualZone")])
 
     targets = FormField(TargetForm)
 

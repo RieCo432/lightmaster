@@ -39,12 +39,12 @@ class Element {
 
 
     Effect effect = {
-      .enabled = false,
-      .name = "rainbow"
+      .enabled = true,
+      .name = "dual_zone"
     };
 
     RainbowEffect rainbowEffect = {
-      .period = 0,
+      .period = 20,
       .hue_start = 0,
       .hue_end = 360,
       .direction = 0,
@@ -106,6 +106,7 @@ class Element {
     void applySpectrumBarsBackground();
     void calculateAudioMask();
     void applyAudioMask();
+    void applyDualZone();
 };
 
 #endif

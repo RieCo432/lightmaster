@@ -33,5 +33,6 @@ class Led {
     void closeApparentAngles(float factor_alpha, float factor_beta);
     
     CRGB getRainbowColour(uint32_t time_elapsed, RainbowEffect* rainbowEffect);
+    CRGB getDualZoneColour();
 };
 #endif

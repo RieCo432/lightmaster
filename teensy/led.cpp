@@ -99,3 +99,7 @@ CRGB Led::getRainbowColour(uint32_t time_elapsed, RainbowEffect* rainbowEffect) 
 
   return CHSV(hue_255, saturation_255, value_255);
 }
+
+CRGB Led::getDualZoneColour() {
+  if (apparent_pos_x >= 0) return CRGB::Blue; else return CRGB::Red;
+}

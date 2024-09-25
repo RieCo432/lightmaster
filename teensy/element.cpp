@@ -164,6 +164,12 @@ void Element::applyRainbowBackground() {
       };
 }
 
+void Element::applyDualZone() {
+  for (int i=0; i < num_leds; i++) {
+        strip_start[i] = start_led[i].getDualZoneColour();
+      };
+}
+
 
 void Element::applySpectrumBarsBackground() {
 
@@ -432,6 +438,10 @@ void Element::setStripColours() {
     if (strcmp(effect.name, "rainbow") == 0) {
 
       applyRainbowBackground();
+      
+    } else if (strcmp(effect.name, "dual_zone") == 0) {
+
+      applyDualZone();
       
     } else if (strcmp(effect.name, "audio") == 0) {
 
