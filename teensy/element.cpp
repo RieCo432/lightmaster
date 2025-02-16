@@ -191,7 +191,7 @@ void Element::applySpectrumBarsBackground() {
     float theta = hue_end - hue_start;
     float fraction_of_circle = theta / M_PI;
 
-    current_angle = current_angle / (2 * M_PI) * fraction_of_circle * 2 * M_PI + hue_start;
+    current_angle = current_angle * fraction_of_circle + hue_start;
 
     if (current_angle > hue_end) current_angle = 2 * hue_end - current_angle;
   }
