@@ -68,32 +68,26 @@ CRGB Led::getRainbowColour(uint32_t time_elapsed, RainbowEffect* rainbowEffect) 
   float hue_end = rainbowEffect->hue_end / 180 * M_PI;
   int compress = rainbowEffect->compress;
 
+  while (hue_start > hue_end) hue_start -= 2 * M_PI;
+
   float hue_range = hue_end - hue_start;
 
   float angle = rainbowEffect->direction == 0 ? apparent_angle_alpha : apparent_angle_beta;
   float radians_per_second = period != 0.0 ? 2 * M_PI / period : 0.0;
 
-  float angle_hue_factor = hue_range / (2 * M_PI);
+
+  float current_angle = fmodf((angle + time_elapsed / 1000.0 * radians_per_second) * compress, 2 * M_PI);
 
   if (fmodf(hue_range, 2 * M_PI) != 0) {
-    angle_hue_factor *= 2;
-  }
-  
+    float theta = hue_end - hue_start;
+    float fraction_of_circle = theta / M_PI;
 
-  float final_angle = (angle + time_elapsed / 1000.0 * radians_per_second) * angle_hue_factor * compress;
+    current_angle = current_angle / (2 * M_PI) * fraction_of_circle * 2 * M_PI + hue_start;
 
-  if (fmodf(hue_range, 2 * M_PI) != 0) {
-    final_angle = fmodf(final_angle, 2 * abs(hue_range)) + hue_start;
-    if (hue_range > 0 && final_angle > hue_end) {
-      float excess_angle = final_angle - hue_end;
-      final_angle = hue_end - excess_angle;
-    } else if (hue_range < 0 && final_angle < hue_end) {
-      float gap_angle = hue_end - final_angle;
-      final_angle = hue_end + gap_angle;
-    }
+    if (current_angle > hue_end) current_angle = 2 * hue_end - current_angle;
   }
 
-  int hue_255 = round(final_angle /  (2 * M_PI) * 255);
+  int hue_255 = round(current_angle /  (2 * M_PI) * 255);
   int saturation_255 = round(255 * rainbowEffect->saturation);
   int value_255 = round(255 * rainbowEffect->value);
 

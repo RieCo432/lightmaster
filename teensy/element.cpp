@@ -178,28 +178,22 @@ void Element::applySpectrumBarsBackground() {
   float hue_start = spectrumBars.hue_start / 180 * M_PI;
   float hue_end = spectrumBars.hue_end / 180 * M_PI;
 
+  while (hue_start > hue_end) hue_start -= 2 * M_PI;
+
   float hue_range = hue_end - hue_start;
 
   float radians_per_second = period != 0.0 ? 2 * M_PI / period : 0.0;
 
-  float angle_hue_factor = hue_range / (2 * M_PI);
+
+  float current_angle = fmodf(millis() / 1000.0 * radians_per_second, 2 * M_PI);
 
   if (fmodf(hue_range, 2 * M_PI) != 0) {
-    angle_hue_factor *= 2;
-  }
-  
+    float theta = hue_end - hue_start;
+    float fraction_of_circle = theta / M_PI;
 
-  float final_hue_offset = fmodf((millis() / 1000.0 * radians_per_second) * angle_hue_factor, 2 * M_PI);
+    current_angle = current_angle / (2 * M_PI) * fraction_of_circle * 2 * M_PI + hue_start;
 
-  if (fmodf(hue_range, 2 * M_PI) != 0) {
-    final_hue_offset = fmodf(final_hue_offset, 2 * abs(hue_range)) + hue_start;
-    if (hue_range > 0 && final_hue_offset > hue_end) {
-      float excess_angle = final_hue_offset - hue_end;
-      final_hue_offset = hue_end - excess_angle;
-    } else if (hue_range < 0 && final_hue_offset < hue_end) {
-      float gap_angle = hue_end - final_hue_offset;
-      final_hue_offset = hue_end + gap_angle;
-    }
+    if (current_angle > hue_end) current_angle = 2 * hue_end - current_angle;
   }
 
   int saturation_255 = round(spectrumBars.saturation * 255);
@@ -210,9 +204,9 @@ void Element::applySpectrumBarsBackground() {
   float hue_offset_peak = spectrumBars.hue_offset_peak / 180 * M_PI;
 
 
-  float hue_low = fmodf(final_hue_offset + spectrumBars.hue_offset_low / 180 * M_PI, 2 * M_PI);
-  float hue_high = fmodf(final_hue_offset + spectrumBars.hue_offset_high / 180 * M_PI, 2* M_PI);
-  float hue_peak = fmodf(final_hue_offset + spectrumBars.hue_offset_peak / 180 * M_PI, 2* M_PI);
+  float hue_low = fmodf(current_angle + spectrumBars.hue_offset_low / 180 * M_PI, 2 * M_PI);
+  float hue_high = fmodf(current_angle + spectrumBars.hue_offset_high / 180 * M_PI, 2* M_PI);
+  float hue_peak = fmodf(current_angle + spectrumBars.hue_offset_peak / 180 * M_PI, 2* M_PI);
 
   int max_num_leds;
 
