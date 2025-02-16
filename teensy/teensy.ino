@@ -98,8 +98,10 @@ void loop() {
       // This removes some relatively constant noise observed with the serial plotter 
       // TODO: A calibration command sent from the raspberry pi could be used to determine constant noise levels at a per-bin level and remove noise in a much more targeted way
       // TODO: As the determined noise values cannot be stored locally, they could be communicated back to the Pi for storage and then sent them back here with the rest of the config at boot time or during config syncing
-      if (i >= 20 && i <= 33) audio_bins[i] = max(audio_bins[i] - 0.0035, 0);
-      if (i >= 34 && i <= 43) audio_bins[i] = max(audio_bins[i] - 0.002, 0);
+      if (i <= 19) audio_bins[i] = max(audio_bins[i] - 0.0003, 0);
+      else if (i >= 20 && i <= 33) audio_bins[i] = max(audio_bins[i] - 0.0035, 0);
+      else if (i >= 34 && i <= 43) audio_bins[i] = max(audio_bins[i] - 0.002, 0);
+      else if (i >= 44 && i <= 256) audio_bins[i] = max(audio_bins[i] - 0.00015, 0);
       // Serial.println(audio_bins[i]*1000000);
     }
   }
